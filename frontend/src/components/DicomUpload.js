@@ -1,70 +1,72 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import './DicomUpload.css';
 
 const DicomUpload = ({ onUploadSuccess }) => {
-  const [file, setFile] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState(null);
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      setError(null);
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      await handleFiles(files);
     }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!file) {
-      setError('Veuillez sélectionner un fichier DICOM');
-      return;
+  const handleFileSelect = async (e) => {
+    const files = e.target.files;
+    if (files.length > 0) {
+      await handleFiles(files);
     }
+  };
 
-    const formData = new FormData();
-    formData.append('dicom', file);
-
+  const handleFiles = async (files) => {
+    setUploading(true);
     try {
-      setUploading(true);
-      setError(null);
-      
-      await axios.post('http://localhost:3001/api/dicom/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      setFile(null);
-      event.target.reset();
-      if (onUploadSuccess) {
-        onUploadSuccess();
-      }
-    } catch (err) {
-      console.error('Erreur détaillée:', err.response?.data || err.message);
-      setError(err.response?.data?.error || 'Erreur lors du téléversement du fichier');
+      // Simulation d'upload
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      onUploadSuccess();
+    } catch (error) {
+      console.error('Erreur lors de l\'upload:', error);
     } finally {
       setUploading(false);
     }
   };
 
   return (
-    <div className="dicom-upload">
-      <h2>Téléverser un fichier DICOM</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="file-input-container">
-          <input
-            type="file"
-            accept=".dcm,application/dicom"
-            onChange={handleFileChange}
-            disabled={uploading}
-          />
-        </div>
-        {error && <div className="error">{error}</div>}
-        <button type="submit" disabled={uploading || !file}>
-          {uploading ? 'Téléversement en cours...' : 'Téléverser'}
-        </button>
-      </form>
+    <div className="upload-container">
+      <div
+        className={`upload-zone ${isDragging ? 'dragging' : ''} ${uploading ? 'uploading' : ''}`}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        <input
+          type="file"
+          accept=".dcm"
+          multiple
+          onChange={handleFileSelect}
+          className="file-input"
+          id="file-input"
+        />
+        <label htmlFor="file-input" className="upload-label">
+          <i className="fas fa-cloud-upload-alt"></i>
+          <span>
+            {uploading ? 'Upload en cours...' : 'Déposer les fichiers DICOM ici ou cliquer pour sélectionner'}
+          </span>
+        </label>
+      </div>
     </div>
   );
 };

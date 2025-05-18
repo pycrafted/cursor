@@ -1,32 +1,121 @@
+/* Reset et styles de base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+  color: #2c3e50;
+  overflow-x: hidden;
+}
+
+/* Layout principal */
 .app {
   min-height: 100vh;
-  background-color: #f5f6fa;
+  display: flex;
+  background-color: #f8f9fa;
 }
 
-.app-header {
-  background-color: #2c3e50;
-  color: white;
-  padding: 1rem;
-  text-align: center;
+/* Zone de contenu principale */
+.main-content {
+  flex: 1;
+  margin-left: 250px;
+  min-height: 100vh;
+  background: #f8f9fa;
+  transition: margin-left 0.3s ease;
+  overflow-x: hidden;
+  position: relative;
 }
 
-.app-header h1 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-.app-content {
-  max-width: 1200px;
-  margin: 0 auto;
+/* Container pour le contenu spécifique des pages */
+.page-container {
   padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 }
 
+/* En-tête de page */
+.page-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.page-header h1 {
+  color: #041c4A;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-header p {
+  color: #6c757d;
+  font-size: 1rem;
+}
+
+/* Conteneur de carte */
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Grille responsive */
+.grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Styles de base pour les boutons */
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #041c4A;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #082861;
+}
+
+/* Styles de base pour les liens */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Media Queries */
 @media (max-width: 768px) {
-  .app-content {
+  .main-content {
+    margin-left: 70px;
+  }
+  
+  .page-container {
     padding: 1rem;
   }
   
-  .app-header h1 {
+  .page-header h1 {
     font-size: 1.5rem;
+  }
+  
+  .card {
+    padding: 1rem;
   }
 } 
