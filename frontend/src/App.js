@@ -6,6 +6,7 @@ import DicomUpload from './components/DicomUpload';
 import PatientInfo from './components/PatientInfo';
 import AppointmentForm from './components/AppointmentForm';
 import Navbar from './components/Navbar';
+import Login from './components/Login';
 import './App.css';
 
 function App() {
@@ -29,30 +30,37 @@ function App() {
   return (
     <Router>
       <div className="app">
-        <Navbar />
-        <main className="main-content">
-          <div className="page-container">
-            <Routes>
-              <Route path="/" element={<Navigate to="/patient/123" replace />} />
-              <Route path="/patient/:id" element={<PatientInfo />} />
-              <Route path="/appointment" element={<AppointmentForm />} />
-              <Route path="/images" element={
-                <div className="card">
-                  <DicomList 
-                    ref={dicomListRef}
-                    onSelectStudy={handleStudySelect} 
-                  />
-                  {selectedStudy && (
-                    <DicomViewer
-                      studyId={selectedStudy}
-                      onClose={handleCloseViewer}
-                    />
-                  )}
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/*" element={
+            <>
+              <Navbar />
+              <main className="main-content">
+                <div className="page-container">
+                  <Routes>
+                    <Route path="/" element={<Navigate to="/patient/123" replace />} />
+                    <Route path="/patient/:id" element={<PatientInfo />} />
+                    <Route path="/appointment" element={<AppointmentForm />} />
+                    <Route path="/images" element={
+                      <div className="card">
+                        <DicomList 
+                          ref={dicomListRef}
+                          onSelectStudy={handleStudySelect} 
+                        />
+                        {selectedStudy && (
+                          <DicomViewer
+                            studyId={selectedStudy}
+                            onClose={handleCloseViewer}
+                          />
+                        )}
+                      </div>
+                    } />
+                  </Routes>
                 </div>
-              } />
-            </Routes>
-          </div>
-        </main>
+              </main>
+            </>
+          } />
+        </Routes>
       </div>
     </Router>
   );

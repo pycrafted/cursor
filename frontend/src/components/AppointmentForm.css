@@ -4,13 +4,16 @@
   padding: 20px;
 }
 
-.appointment-header {
+.appointment-form {
   background: #ffffff;
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 30px;
+  padding: 30px;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+}
+
+.appointment-header {
   text-align: center;
+  margin-bottom: 30px;
 }
 
 .appointment-header h1 {
@@ -23,13 +26,6 @@
   color: #2c3e50;
   margin: 0;
   font-size: 16px;
-}
-
-.appointment-form {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
 }
 
 .form-group {
@@ -66,8 +62,14 @@
 }
 
 .form-group textarea {
+  width: 100%;
   min-height: 120px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
   resize: vertical;
+  margin-bottom: 30px;
 }
 
 .checkbox-group {
@@ -92,8 +94,6 @@
 
 .doctor-availability {
   margin: 30px 0;
-  padding-top: 20px;
-  border-top: 2px solid #e3f2fd;
 }
 
 .doctor-availability h3 {
@@ -171,6 +171,28 @@
   transform: translateY(-2px);
 }
 
+.location-group {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.location-group .form-group {
+  flex: 1;
+}
+
+.datetime-group {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.datetime-group .form-group {
+  flex: 1;
+}
+
 @media (max-width: 768px) {
   .appointment-container {
     padding: 15px;
@@ -187,6 +209,12 @@
   .form-group select,
   .form-group input[type="date"],
   .form-group textarea {
-    font-size: 16px; /* Meilleure lisibilité sur mobile */
+    font-size: 16px;
+  }
+
+  .location-group,
+  .datetime-group {
+    flex-direction: column;
+    gap: 15px;
   }
 } 

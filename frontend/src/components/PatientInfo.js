@@ -149,6 +149,7 @@ const PatientInfo = () => {
   const [isAntecedentModalOpen, setIsAntecedentModalOpen] = useState(false);
   const [isAllergyVaccinationModalOpen, setIsAllergyVaccinationModalOpen] = useState(false);
   const [isRadiologyModalOpen, setIsRadiologyModalOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   // Données radiologiques étendues pour le modal
   const extendedRadiologyData = [
@@ -203,7 +204,7 @@ const PatientInfo = () => {
           </div>
         </div>
 
-        <div className="contact-info-card">
+        <div className="contact-info-card clickable" onClick={() => setIsContactModalOpen(true)}>
           <h2>Coordonnées</h2>
           <div className="contact-details">
             <p><strong>Adresse:</strong> {patientData.informationsPersonnelles.adresse}</p>
@@ -436,6 +437,63 @@ const PatientInfo = () => {
               </div>
             </div>
           ))}
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        title="Détails des Coordonnées"
+      >
+        <div className="contact-details-modal">
+          <div className="contact-grid">
+            <div className="contact-info-item">
+              <div className="contact-info-header">
+                <i className="fas fa-map-marker-alt"></i>
+                <h4>Adresse</h4>
+              </div>
+              <p>{patientData.informationsPersonnelles.adresse}</p>
+            </div>
+
+            <div className="contact-info-item">
+              <div className="contact-info-header">
+                <i className="fas fa-phone"></i>
+                <h4>Téléphone</h4>
+              </div>
+              <p>{patientData.informationsPersonnelles.telephone}</p>
+            </div>
+
+            <div className="contact-info-item">
+              <div className="contact-info-header">
+                <i className="fas fa-envelope"></i>
+                <h4>Email</h4>
+              </div>
+              <p>{patientData.informationsPersonnelles.email}</p>
+            </div>
+          </div>
+
+          <div className="emergency-section">
+            <h3>Personnes à contacter en cas d'urgence</h3>
+            <div className="emergency-contact-grid">
+              <div className="emergency-contact-item">
+                <div className="emergency-contact-header">
+                  <i className="fas fa-user"></i>
+                  <h4>Marie Dupont</h4>
+                </div>
+                <p className="relation">Épouse</p>
+                <p className="phone">01 23 45 67 90</p>
+              </div>
+
+              <div className="emergency-contact-item">
+                <div className="emergency-contact-header">
+                  <i className="fas fa-user-md"></i>
+                  <h4>Dr. Sophie Martin</h4>
+                </div>
+                <p className="relation">Médecin traitant</p>
+                <p className="phone">01 23 45 67 91</p>
+              </div>
+            </div>
+          </div>
         </div>
       </Modal>
     </div>
