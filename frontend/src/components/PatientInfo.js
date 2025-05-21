@@ -147,6 +147,43 @@ const PatientInfo = () => {
   const [isVitalInfoModalOpen, setIsVitalInfoModalOpen] = useState(false);
   const [isTreatmentModalOpen, setIsTreatmentModalOpen] = useState(false);
   const [isAntecedentModalOpen, setIsAntecedentModalOpen] = useState(false);
+  const [isAllergyVaccinationModalOpen, setIsAllergyVaccinationModalOpen] = useState(false);
+  const [isRadiologyModalOpen, setIsRadiologyModalOpen] = useState(false);
+
+  // Données radiologiques étendues pour le modal
+  const extendedRadiologyData = [
+    ...patientData.rapportsRadiologiques,
+    {
+      date: '01/03/2025',
+      type: 'Échographie abdominale',
+      resultat: 'Normal',
+      details: 'Examen complet de l\'abdomen. Pas d\'anomalie détectée. Tous les organes sont de taille et d\'aspect normaux.'
+    },
+    {
+      date: '15/02/2025',
+      type: 'Radiographie thoracique',
+      resultat: 'Normal',
+      details: 'Clichés de face et de profil. Pas d\'anomalie pulmonaire. Silhouette cardiaque normale.'
+    },
+    {
+      date: '01/01/2025',
+      type: 'Scanner abdominal',
+      resultat: 'Anomalie bénigne',
+      details: 'Petit kyste hépatique de 2cm. Pas de signe de malignité. Suivi recommandé dans 6 mois.'
+    },
+    {
+      date: '15/12/2024',
+      type: 'IRM lombaire',
+      resultat: 'Hernie discale',
+      details: 'Hernie discale L4-L5 avec compression modérée de la racine nerveuse. Traitement conservateur recommandé.'
+    },
+    {
+      date: '01/11/2024',
+      type: 'Échographie cardiaque',
+      resultat: 'Normal',
+      details: 'Fonction cardiaque normale. Pas de valvulopathie. Fraction d\'éjection à 65%.'
+    }
+  ];
 
   return (
     <div className="patient-container">
@@ -183,26 +220,21 @@ const PatientInfo = () => {
             <p className="full-width"><strong>Groupe sanguin:</strong> {patientData.informationsMedicales.groupeSanguin}</p>
             <p className="full-width"><strong>IMC:</strong> {patientData.informationsMedicales.imc}</p>
           </div>
-          <div className="card-click-hint">
-            Cliquez pour voir toutes les informations vitales
-            <i className="fas fa-external-link-alt"></i>
-          </div>
         </div>
 
-        <div className="info-card">
-          <h2>Allergies</h2>
-          <ul className="info-list">
-            {patientData.informationsMedicales.allergies.map((allergie, index) => (
-              <li key={index}>{allergie}</li>
-            ))}
-          </ul>
+        <div className="info-card clickable" onClick={() => setIsAllergyVaccinationModalOpen(true)}>
+          <h2>Allergies & Vaccinations</h2>
+          <div className="allergy-vaccination-preview">
+            <p><strong>Allergies:</strong> {patientData.informationsMedicales.allergies.length} allergies connues</p>
+            <p><strong>Vaccinations:</strong> {patientData.informationsMedicales.vaccinations.length} vaccins à jour</p>
+          </div>
         </div>
 
         <div className="info-card clickable" onClick={() => setIsAntecedentModalOpen(true)}>
           <h2>Antécédents</h2>
           <ul className="info-list preview">
             {patientData.informationsMedicales.antecedents
-              .slice(-2) // Prendre les 2 plus récents
+              .slice(-2)
               .reverse()
               .map((antecedent, index) => (
                 <li key={index}>
@@ -210,10 +242,6 @@ const PatientInfo = () => {
                 </li>
             ))}
           </ul>
-          <div className="card-click-hint">
-            Voir l'historique complet depuis l'enfance
-            <i className="fas fa-external-link-alt"></i>
-          </div>
         </div>
 
         <div className="info-card clickable" onClick={() => setIsTreatmentModalOpen(true)}>
@@ -223,23 +251,10 @@ const PatientInfo = () => {
               <li key={index}>{traitement.nom} - {traitement.dosage}</li>
             ))}
           </ul>
-          <div className="card-click-hint">
-            Cliquez pour voir tous les traitements
-            <i className="fas fa-external-link-alt"></i>
-          </div>
-        </div>
-
-        <div className="info-card">
-          <h2>Vaccinations</h2>
-          <ul className="info-list">
-            {patientData.informationsMedicales.vaccinations.map((vaccination, index) => (
-              <li key={index}>{vaccination.nom} - {vaccination.date}</li>
-            ))}
-          </ul>
         </div>
       </div>
 
-      <div className="radiology-section">
+      <div className="radiology-section clickable" onClick={() => setIsRadiologyModalOpen(true)}>
         <h2>Rapports radiologiques</h2>
         <div className="radiology-table-container">
           <table className="radiology-table">
@@ -364,6 +379,60 @@ const PatientInfo = () => {
                   <p className="description">{antecedent.description}</p>
                   <p className="details">{antecedent.details}</p>
                 </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={isAllergyVaccinationModalOpen}
+        onClose={() => setIsAllergyVaccinationModalOpen(false)}
+        title="Détails des Allergies et Vaccinations"
+      >
+        <div className="allergy-vaccination-details">
+          <div className="details-section">
+            <h3>Allergies</h3>
+            <ul className="info-list">
+              {patientData.informationsMedicales.allergies.map((allergie, index) => (
+                <li key={index}>{allergie}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="details-section">
+            <h3>Vaccinations</h3>
+            <ul className="info-list">
+              {patientData.informationsMedicales.vaccinations.map((vaccination, index) => (
+                <li key={index}>
+                  <div className="vaccination-item">
+                    <span className="vaccination-name">{vaccination.nom}</span>
+                    <span className="vaccination-date">{vaccination.date}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={isRadiologyModalOpen}
+        onClose={() => setIsRadiologyModalOpen(false)}
+        title="Historique Complet des Rapports Radiologiques"
+        className="radiology-modal"
+      >
+        <div className="radiology-modal-content">
+          {extendedRadiologyData.map((rapport, index) => (
+            <div key={index} className="radiology-report-item">
+              <div className="radiology-report-header">
+                <div className="radiology-report-date">{rapport.date}</div>
+                <div className="radiology-report-type">{rapport.type}</div>
+                <div className={`radiology-report-result ${rapport.resultat.toLowerCase()}`}>
+                  {rapport.resultat}
+                </div>
+              </div>
+              <div className="radiology-report-details">
+                {rapport.details}
               </div>
             </div>
           ))}

@@ -96,6 +96,9 @@
   padding: 20px;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
 }
 
 .info-card:hover {
@@ -302,7 +305,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 0.5rem;
+  flex-grow: 1;
 }
 
 .vital-signs.preview p {
@@ -323,8 +326,9 @@
 }
 
 .info-list.preview {
-  max-height: 80px;
-  overflow: hidden;
+  max-height: none;
+  overflow: visible;
+  flex-grow: 1;
 }
 
 .treatments-grid {
@@ -540,5 +544,182 @@
 
   .timeline-location {
     font-size: 0.85rem;
+  }
+}
+
+.allergy-vaccination-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex-grow: 1;
+}
+
+.allergy-vaccination-preview p {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 0.95rem;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.allergy-vaccination-preview strong {
+  color: var(--primary-blue);
+  margin-right: 0.5rem;
+}
+
+.preview-section {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.preview-section h3 {
+  color: var(--primary-blue);
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e3f2fd;
+}
+
+.allergy-vaccination-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.details-section {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.details-section h3 {
+  color: var(--primary-blue);
+  font-size: 1.2rem;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e3f2fd;
+}
+
+.vaccination-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.vaccination-name {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.vaccination-date {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .allergy-vaccination-preview,
+  .allergy-vaccination-details {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.radiology-section.clickable {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.radiology-section.clickable:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.radiology-modal-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.radiology-report-item {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.2s ease;
+  height: fit-content;
+}
+
+.radiology-report-item:hover {
+  transform: translateY(-2px);
+}
+
+.radiology-report-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e3f2fd;
+}
+
+.radiology-report-date {
+  color: var(--primary-blue);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.radiology-report-type {
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.radiology-report-result {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.radiology-report-result.normal {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.radiology-report-result.anomalie {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.radiology-report-result.anomalie bénigne {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.radiology-report-result.hernie discale {
+  background: #fce4ec;
+  color: #c2185b;
+}
+
+.radiology-report-details {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .radiology-modal-content {
+    grid-template-columns: 1fr;
+  }
+
+  .radiology-report-header {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
 }

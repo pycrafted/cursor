@@ -216,19 +216,18 @@
 
 /* Bouton rafraîchir */
 .refresh-button {
-  width: 40px;
-  height: 40px;
-  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
   background: transparent;
   color: var(--primary-blue);
   border: 2px solid var(--primary-blue);
-  border-radius: 50%;
-  font-size: 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
   margin-left: auto;
   margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: all 0.3s ease;
   cursor: pointer;
 }
@@ -240,7 +239,12 @@
 }
 
 .refresh-button i {
-  font-size: 18px;
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+
+.refresh-button:hover i {
+  transform: rotate(180deg);
 }
 
 /* Liste des études */

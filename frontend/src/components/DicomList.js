@@ -74,6 +74,10 @@ const DicomList = forwardRef(({ onSelectStudy }, ref) => {
     }
   };
 
+  const handleRefresh = () => {
+    fetchStudies();
+  };
+
   const getStudyDescription = (study) => {
     const tags = study.mainDicomTags;
     const patientTags = study.patientMainDicomTags;
@@ -111,8 +115,12 @@ const DicomList = forwardRef(({ onSelectStudy }, ref) => {
         </select>
       </div>
 
-      <button onClick={fetchStudies} className="refresh-button" title="Rafraîchir la liste" aria-label="Rafraîchir la liste">
-        <i className="fas fa-redo-alt"></i>
+      <button 
+        onClick={handleRefresh}
+        className="refresh-button"
+      >
+        <i className="fas fa-sync-alt"></i>
+        <span>Rafraîchir</span>
       </button>
 
       <div className="studies-grid">

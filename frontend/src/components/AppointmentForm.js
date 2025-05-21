@@ -1,12 +1,24 @@
 import React, { useState } from 'react';
 import './AppointmentForm.css';
 
-// Données fictives des médecins
-const doctors = [
-  { id: 1, name: "Dr. Sophie Martin", speciality: "Médecin généraliste", availableDays: ["Lundi", "Mardi", "Jeudi"] },
-  { id: 2, name: "Dr. Pierre Dubois", speciality: "Cardiologue", availableDays: ["Mercredi", "Vendredi"] },
-  { id: 3, name: "Dr. Marie Lambert", speciality: "Dermatologue", availableDays: ["Lundi", "Mercredi", "Vendredi"] },
-  { id: 4, name: "Dr. Thomas Bernard", speciality: "Pédiatre", availableDays: ["Mardi", "Jeudi"] }
+// Données fictives des hôpitaux et leurs médecins
+const hospitals = [
+  {
+    id: 1,
+    name: "Hôpital Central",
+    doctors: [
+      { id: 1, name: "Dr. Sophie Martin", speciality: "Médecin généraliste", availableDays: ["Lundi", "Mardi", "Jeudi"] },
+      { id: 2, name: "Dr. Pierre Dubois", speciality: "Cardiologue", availableDays: ["Mercredi", "Vendredi"] }
+    ]
+  },
+  {
+    id: 2,
+    name: "Clinique Saint-Joseph",
+    doctors: [
+      { id: 3, name: "Dr. Marie Lambert", speciality: "Dermatologue", availableDays: ["Lundi", "Mercredi", "Vendredi"] },
+      { id: 4, name: "Dr. Thomas Bernard", speciality: "Pédiatre", availableDays: ["Mardi", "Jeudi"] }
+    ]
+  }
 ];
 
 // Créneaux horaires disponibles
@@ -16,6 +28,7 @@ const timeSlots = [
 ];
 
 const AppointmentForm = () => {
+  const [selectedHospital, setSelectedHospital] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
@@ -32,6 +45,7 @@ const AppointmentForm = () => {
     e.preventDefault();
     // Simulation d'envoi de données
     const appointmentData = {
+      hospital: selectedHospital,
       doctor: selectedDoctor,
       date: selectedDate,
       time: selectedTime,
@@ -42,6 +56,11 @@ const AppointmentForm = () => {
     alert('Votre demande de rendez-vous a été enregistrée. Nous vous contacterons pour confirmation.');
   };
 
+  // Filtrer les médecins en fonction de l'hôpital sélectionné
+  const filteredDoctors = selectedHospital 
+    ? hospitals.find(h => h.id === parseInt(selectedHospital))?.doctors || []
+    : [];
+
   return (
     <div className="appointment-container">
       <div className="appointment-header">
@@ -51,15 +70,36 @@ const AppointmentForm = () => {
 
       <form className="appointment-form" onSubmit={handleSubmit}>
         <div className="form-group">
+          <label htmlFor="hospital">Hôpital :</label>
+          <select 
+            id="hospital" 
+            value={selectedHospital} 
+            onChange={(e) => {
+              setSelectedHospital(e.target.value);
+              setSelectedDoctor(''); // Réinitialiser la sélection du médecin
+            }}
+            required
+          >
+            <option value="">Sélectionnez un hôpital</option>
+            {hospitals.map(hospital => (
+              <option key={hospital.id} value={hospital.id}>
+                {hospital.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-group">
           <label htmlFor="doctor">Médecin :</label>
           <select 
             id="doctor" 
             value={selectedDoctor} 
             onChange={(e) => setSelectedDoctor(e.target.value)}
             required
+            disabled={!selectedHospital}
           >
             <option value="">Sélectionnez un médecin</option>
-            {doctors.map(doctor => (
+            {filteredDoctors.map(doctor => (
               <option key={doctor.id} value={doctor.id}>
                 {doctor.name} - {doctor.speciality}
               </option>
@@ -120,7 +160,7 @@ const AppointmentForm = () => {
         <div className="doctor-availability">
           <h3>Disponibilités des médecins</h3>
           <div className="availability-grid">
-            {doctors.map(doctor => (
+            {filteredDoctors.map(doctor => (
               <div key={doctor.id} className="availability-card">
                 <h4>{doctor.name}</h4>
                 <p className="speciality">{doctor.speciality}</p>
