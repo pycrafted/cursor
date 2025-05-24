@@ -7,6 +7,8 @@ import PatientInfo from './components/PatientInfo';
 import AppointmentForm from './components/AppointmentForm';
 import Navbar from './components/Navbar';
 import Login from './components/Login';
+import TeleconsultationFictive from './components/TeleconsultationFictive';
+import AdminDashboard from './components/AdminDashboard';
 import './App.css';
 
 function App() {
@@ -55,6 +57,8 @@ function App() {
                         )}
                       </div>
                     } />
+                    <Route path="/teleconsultation-fictive" element={<TeleconsultationFictive />} />
+                    <Route path="/admin" element={<AdminDashboard />} />
                   </Routes>
                 </div>
               </main>

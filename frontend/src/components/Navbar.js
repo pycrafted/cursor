@@ -46,6 +46,14 @@ const Navbar = () => {
             <i className="fas fa-calendar-plus"></i>
             <span>Rendez-vous</span>
           </Link>
+
+          <Link 
+            to="/admin" 
+            className={`nav-link ${isActive('/admin') ? 'active' : ''}`}
+          >
+            <i className="fas fa-user-shield"></i>
+            <span>Administration</span>
+          </Link>
         </div>
       </div>
 

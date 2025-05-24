@@ -1,0 +1,657 @@
+.tcs-fictive-container {
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f6f8fa;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  padding: 30px;
+  gap: 30px;
+  width: 100%;
+}
+
+.patient-section {
+  width: 320px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.patient-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.patient-photo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #1976d2;
+}
+.video-status {
+  margin-left: auto;
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.patient-infos button {
+  margin-right: 8px;
+  margin-bottom: 8px;
+  background: #e3f2fd;
+  color: #1976d2;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.patient-extra {
+  display: flex;
+  gap: 18px;
+  font-size: 0.98rem;
+}
+.patient-extra h4 {
+  margin: 0 0 6px 0;
+  font-size: 1.08rem;
+  color: #1976d2;
+}
+.patient-extra h5 {
+  margin: 8px 0 2px 0;
+  font-size: 0.98rem;
+  color: #1976d2;
+}
+.patient-extra ul {
+  margin: 0 0 6px 0;
+  padding-left: 18px;
+}
+
+.consult-section {
+  flex: 1.2;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.breadcrumb {
+  color: #1976d2;
+  font-size: 0.98rem;
+  margin-bottom: 8px;
+}
+.obs-block {
+  margin-bottom: 12px;
+}
+.obs-block label {
+  font-weight: 500;
+  color: #1976d2;
+  margin-bottom: 4px;
+  display: block;
+}
+.obs-block input,
+.obs-block textarea {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 1rem;
+  background: #f9f9f9;
+  margin-top: 2px;
+  resize: none;
+}
+.suivi-fields {
+  display: flex;
+  gap: 18px;
+  margin-top: 6px;
+}
+.suivi-fields div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.right-section {
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.plan-soins {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 18px 20px;
+}
+.plan-soins h4 {
+  color: #1976d2;
+  margin-bottom: 12px;
+}
+.soins-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.soins-actions button {
+  background: #e3f2fd;
+  color: #1976d2;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 6px;
+}
+.soins-actions .imprimer {
+  background: #1976d2;
+  color: #fff;
+}
+.facturation {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 18px 20px;
+  font-size: 1rem;
+}
+.facturer-btn {
+  margin-top: auto;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  transition: background 0.2s;
+}
+.facturer-btn:hover {
+  background: #125ea7;
+}
+
+/* Compact layout for TeleconsultationFictive */
+.tcs-fictive-container.compact-tcs {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+  background: #f6f8fa;
+}
+
+.main-content.compact-layout {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 0;
+  height: 100%;
+}
+
+/* Cartes de même taille et style */
+.tcs-fictive-container .tcs-card {
+  flex: 1 1 0;
+  min-width: 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 520px;
+  max-height: 90vh;
+  box-sizing: border-box;
+}
+
+.patient-summary {
+  /* devient une carte */
+  composes: tcs-card from global;
+}
+.consult-section.compact-consult {
+  /* devient une carte */
+  composes: tcs-card from global;
+}
+.right-section.compact-right {
+  /* devient une carte */
+  composes: tcs-card from global;
+  align-items: flex-start;
+}
+
+/* Ajustements pour le contenu interne */
+.patient-summary h2 {
+  font-size: 1.2rem;
+  margin-bottom: 2px;
+}
+.patient-age {
+  font-size: 0.98rem;
+  color: #1976d2;
+  margin-bottom: 10px;
+}
+.patient-block {
+  margin-bottom: 10px;
+}
+.patient-block h4, .patient-block h5 {
+  color: #1976d2;
+  margin: 6px 0 2px 0;
+  font-size: 1rem;
+}
+.patient-block ul {
+  margin: 0 0 4px 0;
+  padding-left: 18px;
+  font-size: 0.97rem;
+}
+
+.consult-section.compact-consult {
+  min-width: 0;
+  max-width: none;
+}
+
+.right-section.compact-right {
+  min-width: 0;
+  max-width: none;
+}
+
+@media (max-width: 1000px) {
+  .main-content.compact-layout {
+    flex-direction: column;
+    gap: 18px;
+    padding: 18px 0;
+  }
+  .tcs-fictive-container .tcs-card {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    height: auto;
+  }
+}
+
+.main-content.two-cards-layout {
+  display: flex;
+  gap: 40px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 0;
+  justify-content: center;
+}
+
+.tcs-card {
+  flex: 1 1 0;
+  min-width: 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 600px;
+  max-width: 600px;
+  box-sizing: border-box;
+}
+
+.ordonnance-section .soins-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 2rem;
+  width: 100%;
+}
+.ordonnance-section .soins-actions button {
+  background: #e3f2fd;
+  color: #1976d2;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 0;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 1rem;
+  width: 100%;
+  transition: background 0.2s;
+}
+.ordonnance-section .soins-actions button:hover {
+  background: #1976d2;
+  color: #fff;
+}
+
+@media (max-width: 1300px) {
+  .main-content.two-cards-layout {
+    max-width: 1000px;
+    gap: 24px;
+  }
+  .tcs-card {
+    height: auto;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .main-content.two-cards-layout {
+    flex-direction: column;
+    gap: 24px;
+    max-width: 100%;
+    padding: 18px 0;
+  }
+  .tcs-card {
+    width: 100%;
+    max-width: none;
+    height: auto;
+  }
+}
+
+.consult-section.tcs-card .obs-block input,
+.consult-section.tcs-card .obs-block textarea {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 1rem;
+  background: #f9f9f9;
+  margin-top: 4px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.consult-section.tcs-card .obs-block textarea {
+  min-height: 70px;
+}
+
+.consult-section.tcs-card .obs-block {
+  margin-bottom: 18px;
+}
+
+.consult-section.tcs-card .suivi-fields {
+  display: flex;
+  gap: 18px;
+  margin-top: 6px;
+}
+
+.consult-section.tcs-card .suivi-fields div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.medicament-fields input {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f9f9f9;
+  box-sizing: border-box;
+}
+
+.generer-ordonnance-btn {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 12px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  transition: background 0.2s;
+}
+.generer-ordonnance-btn:hover {
+  background: #125ea7;
+}
+
+:root {
+  --primary-blue: #1976d2;
+  --gradient-blue: linear-gradient(135deg, #1976d2 0%, #64b5f6 100%);
+  --border-color: #e3f2fd;
+  --border-radius: 12px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.teleconsultation-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 4rem);
+}
+
+.teleconsultation-form {
+  background: #F8F9FA;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form-header h2 {
+  color: #2B4F81;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #2B4F81;
+  font-weight: 500;
+}
+
+.form-group textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 0.75rem;
+  border: 2px solid #e3f2fd;
+  border-radius: 8px;
+  font-size: 1rem;
+  resize: vertical;
+  background: #F8F9FA;
+  color: #2c3e50;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: #2B4F81;
+  box-shadow: 0 0 0 3px rgba(43, 79, 129, 0.1);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e3f2fd;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #F8F9FA;
+  color: #2c3e50;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2B4F81;
+  box-shadow: 0 0 0 3px rgba(43, 79, 129, 0.1);
+}
+
+.more-button {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #e3f2fd;
+  border: none;
+  border-radius: 6px;
+  color: #2B4F81;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.more-button:hover {
+  background: #bbdefb;
+}
+
+.more-button i {
+  font-size: 0.8rem;
+}
+
+.form-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.submit-button {
+  background: linear-gradient(135deg, #2B4F81 0%, #4A90E2 100%);
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  max-width: 300px;
+  width: 100%;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(43, 79, 129, 0.2);
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #F8F9FA;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e3f2fd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  color: #2B4F81;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #2B4F81;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.close-button:hover {
+  color: #4A90E2;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #e3f2fd;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.close-modal-button {
+  background: #2B4F81;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close-modal-button:hover {
+  background: #4A90E2;
+}
+
+@media (max-width: 768px) {
+  .teleconsultation-form {
+    padding: 1.5rem;
+  }
+
+  .form-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .modal-content {
+    width: 95%;
+    margin: 1rem;
+  }
+
+  .modal-header {
+    padding: 1rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .modal-footer {
+    padding: 1rem;
+  }
+} 

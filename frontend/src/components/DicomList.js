@@ -8,19 +8,12 @@ const DicomList = forwardRef(({ onSelectStudy }, ref) => {
   const [studies, setStudies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('date');
   const navigate = useNavigate();
 
   const fetchStudies = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:3001/api/dicom/studies`, {
-        params: {
-          search: searchTerm,
-          sort: sortBy
-        }
-      });
+      const response = await axios.get(`http://localhost:3001/api/dicom/studies`);
       setStudies(response.data);
       setError(null);
     } catch (err) {
@@ -29,7 +22,7 @@ const DicomList = forwardRef(({ onSelectStudy }, ref) => {
     } finally {
       setLoading(false);
     }
-  }, [searchTerm, sortBy]);
+  }, []);
 
   useImperativeHandle(ref, () => ({
     fetchStudies
@@ -96,25 +89,6 @@ const DicomList = forwardRef(({ onSelectStudy }, ref) => {
         <DicomUpload onUploadSuccess={fetchStudies} />
       </div>
 
-      <div className="dicom-controls">
-        <input
-          type="text"
-          placeholder="Rechercher une étude..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
-        
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="sort-select"
-        >
-          <option value="date">Trier par date</option>
-          <option value="uid">Trier par ID</option>
-        </select>
-      </div>
-
       <button 
         onClick={handleRefresh}
         className="refresh-button"
@@ -123,63 +97,54 @@ const DicomList = forwardRef(({ onSelectStudy }, ref) => {
         <span>Rafraîchir</span>
       </button>
 
-      <div className="studies-grid">
-        {loading ? (
-          <div className="loading">Chargement des études...</div>
-        ) : error ? (
-          <div className="error">{error}</div>
-        ) : studies.length === 0 ? (
-          <p className="no-results">Aucune étude disponible</p>
-        ) : (
-          <ul>
-            {studies.map((study) => {
-              const { patientName, studyDate, studyDescription, accessionNumber } = getStudyDescription(study);
-              return (
-                <li key={study.id}>
-                  <div className="study-info">
-                    <div className="patient-name">{patientName}</div>
-                    <div className="study-details">
-                      <span className="study-date">{studyDate}</span>
-                      <span className="study-description">{studyDescription}</span>
-                      <span className="accession-number">ACC#: {accessionNumber}</span>
-                    </div>
+      {loading ? (
+        <div className="loading">Chargement des études...</div>
+      ) : error ? (
+        <div className="error">{error}</div>
+      ) : studies.length === 0 ? (
+        <p className="no-results">Aucune étude disponible</p>
+      ) : (
+        <ul>
+          {studies.map((study) => {
+            const { patientName, studyDate, studyDescription, accessionNumber } = getStudyDescription(study);
+            return (
+              <li key={study.id}>
+                <div className="study-info">
+                  <div className="patient-name">{patientName}</div>
+                  <div className="study-details">
+                    <span className="study-date">{studyDate}</span>
+                    <span className="study-description">{studyDescription}</span>
+                    <span className="accession-number">ACC#: {accessionNumber}</span>
                   </div>
-                  <div className="study-actions">
-                    <button 
-                      onClick={() => handleDownload(study.id)}
-                      className="action-button download-button"
-                    >
-                      <i className="fas fa-download"></i>
-                      Télécharger
-                    </button>
-                    <button 
-                      onClick={() => onSelectStudy(study.studyInstanceUID)}
-                      className="action-button view-button"
-                    >
-                      <i className="fas fa-eye"></i>
-                      Visualiser
-                    </button>
-                    <button 
-                      onClick={() => navigate(`/patient/123`)}
-                      className="action-button info-button"
-                    >
-                      <i className="fas fa-user"></i>
-                      Dossier patient
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(study.id)}
-                      className="action-button delete-button"
-                    >
-                      <i className="fas fa-trash"></i>
-                      Supprimer
-                    </button>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
+                </div>
+                <div className="study-actions">
+                  <button 
+                    onClick={() => handleDownload(study.id)}
+                    className="action-button download-button"
+                  >
+                    <i className="fas fa-download"></i>
+                    Télécharger
+                  </button>
+                  <button 
+                    onClick={() => onSelectStudy(study.studyInstanceUID)}
+                    className="action-button view-button"
+                  >
+                    <i className="fas fa-eye"></i>
+                    Visualiser
+                  </button>
+                  <button 
+                    onClick={() => handleDelete(study.id)}
+                    className="action-button delete-button"
+                  >
+                    <i className="fas fa-trash"></i>
+                    Supprimer
+                  </button>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 });

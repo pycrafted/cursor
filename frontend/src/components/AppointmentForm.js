@@ -6,17 +6,19 @@ const hospitals = [
   {
     id: 1,
     name: "Hôpital Central",
+    address: "123 rue de la Santé, 75001 Paris",
     doctors: [
-      { id: 1, name: "Dr. Sophie Martin", speciality: "Médecin généraliste" },
-      { id: 2, name: "Dr. Pierre Dubois", speciality: "Cardiologue" }
+      { id: 1, name: "Dr. Sophie Martin", speciality: "Médecin généraliste", availability: "Lun-Ven, 9h-17h" },
+      { id: 2, name: "Dr. Pierre Dubois", speciality: "Cardiologue", availability: "Mar-Sam, 8h-16h" }
     ]
   },
   {
     id: 2,
     name: "Clinique Saint-Joseph",
+    address: "45 avenue des Lilas, 75016 Paris",
     doctors: [
-      { id: 3, name: "Dr. Marie Lambert", speciality: "Dermatologue" },
-      { id: 4, name: "Dr. Thomas Bernard", speciality: "Pédiatre" }
+      { id: 3, name: "Dr. Marie Lambert", speciality: "Dermatologue", availability: "Lun-Jeu, 9h-18h" },
+      { id: 4, name: "Dr. Thomas Bernard", speciality: "Pédiatre", availability: "Mar-Ven, 8h-17h" }
     ]
   }
 ];
@@ -63,19 +65,21 @@ const AppointmentForm = () => {
     <div className="appointment-container">
       <form className="appointment-form" onSubmit={handleSubmit}>
         <div className="appointment-header">
-          <h1>Prise de rendez-vous</h1>
+          <h1><i className="fas fa-calendar-check"></i> Prise de rendez-vous</h1>
           <p>Remplissez le formulaire ci-dessous pour demander un rendez-vous avec l'un de nos médecins.</p>
         </div>
 
         <div className="location-group">
           <div className="form-group">
-            <label htmlFor="hospital">Hôpital :</label>
+            <label htmlFor="hospital">
+              <i className="fas fa-hospital"></i> Hôpital
+            </label>
             <select 
               id="hospital" 
               value={selectedHospital} 
               onChange={(e) => {
                 setSelectedHospital(e.target.value);
-                setSelectedDoctor(''); // Réinitialiser la sélection du médecin
+                setSelectedDoctor('');
               }}
               required
             >
@@ -89,7 +93,9 @@ const AppointmentForm = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="doctor">Médecin :</label>
+            <label htmlFor="doctor">
+              <i className="fas fa-user-md"></i> Médecin
+            </label>
             <select 
               id="doctor" 
               value={selectedDoctor} 
@@ -109,7 +115,9 @@ const AppointmentForm = () => {
 
         <div className="datetime-group">
           <div className="form-group">
-            <label htmlFor="date">Date souhaitée :</label>
+            <label htmlFor="date">
+              <i className="fas fa-calendar-alt"></i> Date souhaitée
+            </label>
             <input 
               type="date" 
               id="date"
@@ -122,7 +130,9 @@ const AppointmentForm = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="time">Horaire préféré :</label>
+            <label htmlFor="time">
+              <i className="fas fa-clock"></i> Horaire préféré
+            </label>
             <select 
               id="time"
               value={selectedTime}
@@ -138,7 +148,9 @@ const AppointmentForm = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="reason">Motif de la consultation :</label>
+          <label htmlFor="reason">
+            <i className="fas fa-comment-medical"></i> Motif de la consultation
+          </label>
           <textarea
             id="reason"
             value={reason}
@@ -148,8 +160,28 @@ const AppointmentForm = () => {
           />
         </div>
 
+        {selectedDoctor && (
+          <div className="doctor-availability">
+            <h3><i className="fas fa-info-circle"></i> Disponibilités du médecin</h3>
+            <div className="availability-grid">
+              {filteredDoctors
+                .filter(doctor => doctor.id === parseInt(selectedDoctor))
+                .map(doctor => (
+                  <div key={doctor.id} className="availability-card">
+                    <h4>{doctor.name}</h4>
+                    <p className="speciality">{doctor.speciality}</p>
+                    <p className="days">Horaires de consultation :</p>
+                    <ul>
+                      <li>{doctor.availability}</li>
+                    </ul>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+
         <button type="submit" className="submit-button">
-          Demander un rendez-vous
+          <i className="fas fa-check-circle"></i> Demander un rendez-vous
         </button>
       </form>
     </div>

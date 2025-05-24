@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from './Modal';
 import './PatientInfo.css';
+import { jsPDF } from 'jspdf';
 
 // Données fictives du patient
 const patientData = {
   id: '123',
-  photo: process.env.PUBLIC_URL + '/images.jpeg',
+  photo: process.env.PUBLIC_URL + '/re.jpeg',
   informationsPersonnelles: {
     nom: 'Jean Dupont',
     age: 45,
@@ -188,96 +189,112 @@ const PatientInfo = () => {
 
   return (
     <div className="patient-container">
-      <div className="patient-header-grid">
-        <div className="patient-identity-card">
+      <div className="patient-card">
+        <div className="patient-identity">
           <div className="patient-photo-container">
-            <img src={patientData.photo} alt="Patient" className="patient-photo" />
+            <img 
+              src={patientData.photo} 
+              alt={`${patientData.informationsPersonnelles.nom}`} 
+              className="patient-photo"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 0, border: 'none', boxShadow: 'none' }}
+            />
           </div>
           <div className="patient-basic-info">
             <h1>{patientData.informationsPersonnelles.nom}</h1>
             <div className="patient-details">
-              <p><strong>N° Dossier:</strong> {patientData.informationsPersonnelles.numeroDossier}</p>
-              <p><strong>Date de naissance:</strong> {patientData.informationsPersonnelles.dateNaissance}</p>
-              <p><strong>Âge:</strong> {patientData.informationsPersonnelles.age} ans</p>
-              <p><strong>Sexe:</strong> {patientData.informationsPersonnelles.sexe}</p>
+              <p><strong>Numéro de carte d'identité:</strong> {patientData.informationsPersonnelles.numeroDossier}</p>
+              <p><strong>Numéro de téléphone:</strong> {patientData.informationsPersonnelles.telephone}</p>
+              <p><strong>Numéro patient:</strong> {patientData.id}</p>
             </div>
-          </div>
-        </div>
-
-        <div className="contact-info-card clickable" onClick={() => setIsContactModalOpen(true)}>
-          <h2>Coordonnées</h2>
-          <div className="contact-details">
-            <p><strong>Adresse:</strong> {patientData.informationsPersonnelles.adresse}</p>
-            <p><strong>Téléphone:</strong> {patientData.informationsPersonnelles.telephone}</p>
-            <p><strong>Email:</strong> {patientData.informationsPersonnelles.email}</p>
           </div>
         </div>
       </div>
 
-      <div className="info-grid">
-        <div className="info-card clickable" onClick={() => setIsVitalInfoModalOpen(true)}>
-          <h2>Informations Vitales</h2>
-          <div className="vital-signs preview">
-            <p className="full-width"><strong>Groupe sanguin:</strong> {patientData.informationsMedicales.groupeSanguin}</p>
-            <p className="full-width"><strong>IMC:</strong> {patientData.informationsMedicales.imc}</p>
+      <div className="medical-info-grid">
+        <div className="medical-info-section clickable" onClick={() => setIsContactModalOpen(true)}>
+          <div className="section-header">
+            <i className="fas fa-user-circle"></i>
+            <h2>Informations du Patient et Coordonnées</h2>
+          </div>
+          <div className="section-content">
+            <div className="vital-signs preview">
+              <p><strong>Sexe:</strong> {patientData.informationsPersonnelles.sexe}</p>
+              <p><strong>Âge:</strong> {patientData.informationsPersonnelles.age} ans</p>
+              <p><strong>Téléphone:</strong> {patientData.informationsPersonnelles.telephone}</p>
+            </div>
           </div>
         </div>
 
-        <div className="info-card clickable" onClick={() => setIsAllergyVaccinationModalOpen(true)}>
-          <h2>Allergies & Vaccinations</h2>
-          <div className="allergy-vaccination-preview">
+        <div className="medical-info-section clickable" onClick={() => setIsVitalInfoModalOpen(true)}>
+          <div className="section-header">
+            <i className="fas fa-heartbeat"></i>
+            <h2>Informations Vitales</h2>
+          </div>
+          <div className="section-content">
+            <p><strong>Groupe sanguin:</strong> {patientData.informationsMedicales.groupeSanguin}</p>
+            <p><strong>IMC:</strong> {patientData.informationsMedicales.imc}</p>
+          </div>
+        </div>
+
+        <div className="medical-info-section clickable" onClick={() => setIsAllergyVaccinationModalOpen(true)}>
+          <div className="section-header">
+            <i className="fas fa-allergies"></i>
+            <h2>Allergies & Vaccinations</h2>
+          </div>
+          <div className="section-content">
             <p><strong>Allergies:</strong> {patientData.informationsMedicales.allergies.length} allergies connues</p>
             <p><strong>Vaccinations:</strong> {patientData.informationsMedicales.vaccinations.length} vaccins à jour</p>
           </div>
         </div>
 
-        <div className="info-card clickable" onClick={() => setIsAntecedentModalOpen(true)}>
-          <h2>Antécédents</h2>
-          <ul className="info-list preview">
-            {patientData.informationsMedicales.antecedents
-              .slice(-2)
-              .reverse()
-              .map((antecedent, index) => (
-                <li key={index}>
-                  {antecedent.description} ({antecedent.date})
-                </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="info-card clickable" onClick={() => setIsTreatmentModalOpen(true)}>
-          <h2>Traitements en cours</h2>
-          <ul className="info-list preview">
-            {patientData.informationsMedicales.traitements.slice(0, 2).map((traitement, index) => (
-              <li key={index}>{traitement.nom} - {traitement.dosage}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <div className="radiology-section clickable" onClick={() => setIsRadiologyModalOpen(true)}>
-        <h2>Rapports radiologiques</h2>
-        <div className="radiology-table-container">
-          <table className="radiology-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Type d'examen</th>
-                <th>Résultat</th>
-                <th>Détails</th>
-              </tr>
-            </thead>
-            <tbody>
-              {patientData.rapportsRadiologiques.map((rapport, index) => (
-                <tr key={index}>
-                  <td>{rapport.date}</td>
-                  <td>{rapport.type}</td>
-                  <td>{rapport.resultat}</td>
-                  <td>{rapport.details}</td>
-                </tr>
+        <div className="medical-info-section clickable" onClick={() => setIsAntecedentModalOpen(true)}>
+          <div className="section-header">
+            <i className="fas fa-history"></i>
+            <h2>Antécédents</h2>
+          </div>
+          <div className="section-content">
+            <ul className="info-list">
+              {patientData.informationsMedicales.antecedents
+                .slice(-2)
+                .reverse()
+                .map((antecedent, index) => (
+                  <li key={index}>
+                    {antecedent.description} ({antecedent.date})
+                  </li>
               ))}
-            </tbody>
-          </table>
+            </ul>
+          </div>
+        </div>
+
+        <div className="medical-info-section clickable" onClick={() => setIsTreatmentModalOpen(true)}>
+          <div className="section-header">
+            <i className="fas fa-pills"></i>
+            <h2>Traitements en cours</h2>
+          </div>
+          <div className="section-content">
+            <ul className="info-list">
+              {patientData.informationsMedicales.traitements.slice(0, 2).map((traitement, index) => (
+                <li key={index}>{traitement.nom} - {traitement.dosage}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="medical-info-section clickable" onClick={() => setIsRadiologyModalOpen(true)}>
+          <div className="section-header">
+            <i className="fas fa-x-ray"></i>
+            <h2>Rapports radiologiques</h2>
+          </div>
+          <div className="section-content">
+            <div className="radiology-preview">
+              {patientData.rapportsRadiologiques.slice(0, 2).map((rapport, index) => (
+                <div key={index} className="radiology-preview-item">
+                  <span className="date">{rapport.date}</span>
+                  <span className="type">{rapport.type}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -287,6 +304,100 @@ const PatientInfo = () => {
           onClick={() => navigate('/images')}
         >
           Voir les images médicales
+        </button>
+        <button 
+          className="primary-button"
+          onClick={() => navigate('/teleconsultation-fictive')}
+        >
+          Téléconsultation
+        </button>
+        <button 
+          className="primary-button"
+          onClick={() => {
+            // Créer un nouveau document PDF
+            const doc = new jsPDF();
+            
+            // Titre
+            doc.setFontSize(20);
+            doc.text('Dossier Médical', 105, 20, { align: 'center' });
+            
+            // Informations personnelles
+            doc.setFontSize(16);
+            doc.text('Informations Personnelles', 20, 40);
+            doc.setFontSize(12);
+            doc.text(`Nom: ${patientData.informationsPersonnelles.nom}`, 20, 50);
+            doc.text(`Âge: ${patientData.informationsPersonnelles.age} ans`, 20, 60);
+            doc.text(`Sexe: ${patientData.informationsPersonnelles.sexe}`, 20, 70);
+            doc.text(`Date de naissance: ${patientData.informationsPersonnelles.dateNaissance}`, 20, 80);
+            doc.text(`Numéro de dossier: ${patientData.informationsPersonnelles.numeroDossier}`, 20, 90);
+            doc.text(`Adresse: ${patientData.informationsPersonnelles.adresse}`, 20, 100);
+            doc.text(`Téléphone: ${patientData.informationsPersonnelles.telephone}`, 20, 110);
+            doc.text(`Email: ${patientData.informationsPersonnelles.email}`, 20, 120);
+            
+            // Informations médicales
+            doc.setFontSize(16);
+            doc.text('Informations Médicales', 20, 140);
+            doc.setFontSize(12);
+            doc.text(`Groupe sanguin: ${patientData.informationsMedicales.groupeSanguin}`, 20, 150);
+            doc.text(`Poids: ${patientData.informationsMedicales.poids}`, 20, 160);
+            doc.text(`Taille: ${patientData.informationsMedicales.taille}`, 20, 170);
+            doc.text(`IMC: ${patientData.informationsMedicales.imc}`, 20, 180);
+            
+            // Allergies
+            doc.text('Allergies:', 20, 200);
+            patientData.informationsMedicales.allergies.forEach((allergie, index) => {
+              doc.text(`- ${allergie}`, 30, 210 + (index * 10));
+            });
+            
+            // Vaccinations
+            doc.text('Vaccinations:', 20, 240);
+            patientData.informationsMedicales.vaccinations.forEach((vaccin, index) => {
+              doc.text(`- ${vaccin.nom} (${vaccin.date})`, 30, 250 + (index * 10));
+            });
+            
+            // Traitements en cours
+            doc.setFontSize(16);
+            doc.text('Traitements en cours', 20, 280);
+            doc.setFontSize(12);
+            patientData.informationsMedicales.traitements.forEach((traitement, index) => {
+              const y = 290 + (index * 40);
+              doc.text(`Médicament: ${traitement.nom}`, 20, y);
+              doc.text(`Dosage: ${traitement.dosage}`, 20, y + 10);
+              doc.text(`Fréquence: ${traitement.frequence}`, 20, y + 20);
+              doc.text(`Prescripteur: ${traitement.prescripteur}`, 20, y + 30);
+            });
+            
+            // Antécédents
+            doc.addPage();
+            doc.setFontSize(16);
+            doc.text('Antécédents médicaux', 20, 20);
+            doc.setFontSize(12);
+            patientData.informationsMedicales.antecedents.forEach((antecedent, index) => {
+              const y = 30 + (index * 40);
+              doc.text(`Date: ${antecedent.date} (${antecedent.age} ans)`, 20, y);
+              doc.text(`Type: ${antecedent.type}`, 20, y + 10);
+              doc.text(`Description: ${antecedent.description}`, 20, y + 20);
+              doc.text(`Lieu: ${antecedent.lieu}`, 20, y + 30);
+            });
+            
+            // Rapports radiologiques
+            doc.addPage();
+            doc.setFontSize(16);
+            doc.text('Rapports radiologiques', 20, 20);
+            doc.setFontSize(12);
+            patientData.rapportsRadiologiques.forEach((rapport, index) => {
+              const y = 30 + (index * 40);
+              doc.text(`Date: ${rapport.date}`, 20, y);
+              doc.text(`Type: ${rapport.type}`, 20, y + 10);
+              doc.text(`Résultat: ${rapport.resultat}`, 20, y + 20);
+              doc.text(`Détails: ${rapport.details}`, 20, y + 30);
+            });
+            
+            // Télécharger le PDF
+            doc.save(`dossier_medical_${patientData.informationsPersonnelles.nom.replace(/\s+/g, '_')}.pdf`);
+          }}
+        >
+          Télécharger le dossier médical
         </button>
       </div>
 
@@ -402,16 +513,14 @@ const PatientInfo = () => {
           </div>
           <div className="details-section">
             <h3>Vaccinations</h3>
-            <ul className="info-list">
+            <div className="vaccination-list">
               {patientData.informationsMedicales.vaccinations.map((vaccination, index) => (
-                <li key={index}>
-                  <div className="vaccination-item">
-                    <span className="vaccination-name">{vaccination.nom}</span>
-                    <span className="vaccination-date">{vaccination.date}</span>
-                  </div>
-                </li>
+                <div key={index} className="vaccination-item">
+                  <span className="vaccination-name">{vaccination.nom}</span>
+                  <span className="vaccination-date">{vaccination.date}</span>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       </Modal>
@@ -443,32 +552,60 @@ const PatientInfo = () => {
       <Modal
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
-        title="Détails des Coordonnées"
+        title="Informations du Patient et Coordonnées"
       >
         <div className="contact-details-modal">
-          <div className="contact-grid">
-            <div className="contact-info-item">
-              <div className="contact-info-header">
+          <div className="contact-info-section">
+            <div className="contact-info-header">
+              <i className="fas fa-user"></i>
+              <h3>Informations Personnelles</h3>
+            </div>
+            <div className="contact-info-content">
+              <div className="contact-info-item">
+                <i className="fas fa-calendar"></i>
+                <div className="contact-info-text">
+                  <p><span className="contact-label">Date de naissance :</span> {patientData.informationsPersonnelles.dateNaissance}</p>
+                </div>
+              </div>
+              <div className="contact-info-item">
+                <i className="fas fa-birthday-cake"></i>
+                <div className="contact-info-text">
+                  <p><span className="contact-label">Âge :</span> {patientData.informationsPersonnelles.age} ans</p>
+                </div>
+              </div>
+              <div className="contact-info-item">
+                <i className="fas fa-venus-mars"></i>
+                <div className="contact-info-text">
+                  <p><span className="contact-label">Sexe :</span> {patientData.informationsPersonnelles.sexe}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="contact-info-section">
+            <div className="contact-info-header">
+              <i className="fas fa-address-book"></i>
+              <h3>Informations de contact</h3>
+            </div>
+            <div className="contact-info-content">
+              <div className="contact-info-item">
                 <i className="fas fa-map-marker-alt"></i>
-                <h4>Adresse</h4>
+                <div className="contact-info-text">
+                  <p><span className="contact-label">Adresse :</span> {patientData.informationsPersonnelles.adresse}</p>
+                </div>
               </div>
-              <p>{patientData.informationsPersonnelles.adresse}</p>
-            </div>
-
-            <div className="contact-info-item">
-              <div className="contact-info-header">
+              <div className="contact-info-item">
                 <i className="fas fa-phone"></i>
-                <h4>Téléphone</h4>
+                <div className="contact-info-text">
+                  <p><span className="contact-label">Téléphone :</span> {patientData.informationsPersonnelles.telephone}</p>
+                </div>
               </div>
-              <p>{patientData.informationsPersonnelles.telephone}</p>
-            </div>
-
-            <div className="contact-info-item">
-              <div className="contact-info-header">
+              <div className="contact-info-item">
                 <i className="fas fa-envelope"></i>
-                <h4>Email</h4>
+                <div className="contact-info-text">
+                  <p><span className="contact-label">Email :</span> {patientData.informationsPersonnelles.email}</p>
+                </div>
               </div>
-              <p>{patientData.informationsPersonnelles.email}</p>
             </div>
           </div>
 
