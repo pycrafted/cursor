@@ -159,43 +159,43 @@ Effets secondaires: ${ordonnance.effetsSecondaires}
               </button>
             </div>
             <div className="modal-body">
-              <div className="form-group">
-                <label>Motif de la consultation</label>
-                <textarea
-                  name="motif"
-                  value={consultation.motif}
-                  onChange={handleChange}
-                  placeholder="Entrez le motif de la consultation..."
-                />
-              </div>
-              <div className="form-group">
-                <label>Symptômes</label>
-                <textarea
-                  name="symptomes"
-                  value={consultation.symptomes}
-                  onChange={handleChange}
-                  placeholder="Décrivez les symptômes..."
-                />
-              </div>
-              <div className="form-group">
-                <label>Observations</label>
-                <textarea
-                  name="observations"
-                  value={consultation.observations}
-                  onChange={handleChange}
-                  placeholder="Ajoutez vos observations..."
-                />
-              </div>
-              <div className="form-group">
-                <label>Recommandations</label>
-                <textarea
-                  name="recommandations"
-                  value={consultation.recommandations}
-                  onChange={handleChange}
-                  placeholder="Ajoutez vos recommandations..."
-                />
-              </div>
-            </div>
+          <div className="form-group">
+            <label>Motif de la consultation</label>
+            <textarea
+              name="motif"
+              value={consultation.motif}
+              onChange={handleChange}
+              placeholder="Entrez le motif de la consultation..."
+            />
+          </div>
+          <div className="form-group">
+            <label>Symptômes</label>
+            <textarea
+              name="symptomes"
+              value={consultation.symptomes}
+              onChange={handleChange}
+              placeholder="Décrivez les symptômes..."
+            />
+          </div>
+          <div className="form-group">
+            <label>Observations</label>
+            <textarea
+              name="observations"
+              value={consultation.observations}
+              onChange={handleChange}
+              placeholder="Ajoutez vos observations..."
+            />
+          </div>
+          <div className="form-group">
+            <label>Recommandations</label>
+            <textarea
+              name="recommandations"
+              value={consultation.recommandations}
+              onChange={handleChange}
+              placeholder="Ajoutez vos recommandations..."
+            />
+          </div>
+        </div>
             <div className="modal-footer">
               <button 
                 type="button" 
@@ -221,106 +221,106 @@ Effets secondaires: ${ordonnance.effetsSecondaires}
             </div>
             <div className="modal-body">
               <div className="form-row">
-                <div className="form-group">
-                  <label>Nom du médicament</label>
-                  <input
-                    type="text"
-                    name="nom"
-                    value={ordonnance.nom}
-                    onChange={handleOrdonnanceChange}
-                    placeholder="Entrez le nom du médicament..."
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Dosage</label>
-                  <input
-                    type="text"
-                    name="dosage"
-                    value={ordonnance.dosage}
-                    onChange={handleOrdonnanceChange}
-                    placeholder="Ex: 1000mg"
-                    required
-                  />
-                </div>
+          <div className="form-group">
+            <label>Nom du médicament</label>
+            <input
+              type="text"
+              name="nom"
+              value={ordonnance.nom}
+              onChange={handleOrdonnanceChange}
+              placeholder="Entrez le nom du médicament..."
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Dosage</label>
+            <input
+              type="text"
+              name="dosage"
+              value={ordonnance.dosage}
+              onChange={handleOrdonnanceChange}
+              placeholder="Ex: 1000mg"
+              required
+            />
+          </div>
               </div>
               <div className="form-row">
-                <div className="form-group">
-                  <label>Fréquence</label>
-                  <input
-                    type="text"
-                    name="frequence"
-                    value={ordonnance.frequence}
-                    onChange={handleOrdonnanceChange}
-                    placeholder="Ex: 2 fois par jour"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Durée</label>
-                  <input
-                    type="text"
-                    name="duree"
-                    value={ordonnance.duree}
-                    onChange={handleOrdonnanceChange}
-                    placeholder="Ex: 6 mois"
-                    required
-                  />
-                </div>
+          <div className="form-group">
+            <label>Fréquence</label>
+            <input
+              type="text"
+              name="frequence"
+              value={ordonnance.frequence}
+              onChange={handleOrdonnanceChange}
+              placeholder="Ex: 2 fois par jour"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Durée</label>
+            <input
+              type="text"
+              name="duree"
+              value={ordonnance.duree}
+              onChange={handleOrdonnanceChange}
+              placeholder="Ex: 6 mois"
+              required
+            />
+          </div>
               </div>
               <div className="form-row">
-                <div className="form-group">
-                  <label>Date de début</label>
-                  <input
-                    type="date"
-                    name="dateDebut"
-                    value={ordonnance.dateDebut}
-                    onChange={handleOrdonnanceChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Prescripteur</label>
-                  <input
-                    type="text"
-                    name="prescripteur"
-                    value={ordonnance.prescripteur}
-                    onChange={handleOrdonnanceChange}
+          <div className="form-group">
+            <label>Date de début</label>
+            <input
+              type="date"
+              name="dateDebut"
+              value={ordonnance.dateDebut}
+              onChange={handleOrdonnanceChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Prescripteur</label>
+            <input
+              type="text"
+              name="prescripteur"
+              value={ordonnance.prescripteur}
+              onChange={handleOrdonnanceChange}
                     placeholder="Nom du prescripteur"
-                    required
-                  />
+              required
+            />
                 </div>
-              </div>
-              <div className="form-group">
-                <label>Instructions</label>
-                <textarea
-                  name="instructions"
-                  value={ordonnance.instructions}
-                  onChange={handleOrdonnanceChange}
+          </div>
+          <div className="form-group">
+            <label>Instructions</label>
+            <textarea
+              name="instructions"
+              value={ordonnance.instructions}
+              onChange={handleOrdonnanceChange}
                   placeholder="Instructions spécifiques..."
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Effets secondaires</label>
-                <textarea
-                  name="effetsSecondaires"
-                  value={ordonnance.effetsSecondaires}
-                  onChange={handleOrdonnanceChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Effets secondaires</label>
+            <textarea
+              name="effetsSecondaires"
+              value={ordonnance.effetsSecondaires}
+              onChange={handleOrdonnanceChange}
                   placeholder="Effets secondaires connus..."
-                />
-              </div>
+            />
+          </div>
             </div>
             <div className="modal-footer">
-              <button 
-                type="button" 
-                className="submit-button"
-                onClick={handleOrdonnanceSubmit}
-              >
-                Ajouter le médicament
-              </button>
-            </div>
+            <button 
+              type="button" 
+              className="submit-button"
+              onClick={handleOrdonnanceSubmit}
+            >
+              Ajouter le médicament
+            </button>
           </div>
+        </div>
         </div>
       )}
     </div>

@@ -67,6 +67,14 @@ const Navbar = () => {
           </Link>
 
           <Link 
+            to="/hospitals" 
+            className={`nav-link ${isActive('/hospitals') ? 'active' : ''}`}
+          >
+            <i className="fas fa-hospital"></i>
+            <span>Gestion des Hôpitaux</span>
+          </Link>
+
+          <Link 
             to="/super-admin" 
             className={`nav-link ${isActive('/super-admin') ? 'active' : ''}`}
           >

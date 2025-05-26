@@ -1,55 +1,177 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './SuperAdmin.css';
 
 const SuperAdmin = () => {
   const [activeTab, setActiveTab] = useState('hospitals');
   const [showAddModal, setShowAddModal] = useState(false);
   const [modalType, setModalType] = useState('');
+  const [hospitals, setHospitals] = useState([]);
+  const [admins, setAdmins] = useState([]);
+  const [formData, setFormData] = useState({
+    name: '',
+    address: '',
+    phone: '',
+    email: '',
+    hospitalId: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
-  // Données fictives pour les hôpitaux
-  const hospitals = [
-    {
-      id: 1,
-      name: 'Hôpital Central',
-      address: '123 Avenue de la Santé, Paris',
-      phone: '01 23 45 67 89',
-      email: 'contact@hopital-central.fr',
-      adminCount: 3,
-      status: 'active'
-    },
-    {
-      id: 2,
-      name: 'Clinique Saint-Joseph',
-      address: '45 Rue des Médecins, Lyon',
-      phone: '04 56 78 90 12',
-      email: 'contact@clinique-saint-joseph.fr',
-      adminCount: 2,
-      status: 'active'
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
     }
-  ];
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (payload.role !== 'super_admin') {
+        navigate('/');
+      }
+    } catch (e) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
-  // Données fictives pour les administrateurs
-  const admins = [
-    {
-      id: 1,
-      name: 'Dr. Martin',
-      email: 'martin@hopital-central.fr',
-      hospital: 'Hôpital Central',
-      role: 'Administrateur Principal',
-      status: 'active'
-    },
-    {
-      id: 2,
-      name: 'Dr. Dubois',
-      email: 'dubois@clinique-saint-joseph.fr',
-      hospital: 'Clinique Saint-Joseph',
-      role: 'Administrateur Principal',
-      status: 'active'
+  useEffect(() => {
+    fetchHospitals();
+    fetchAdmins();
+  }, []);
+
+  // Effet pour gérer la disparition des messages de succès
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setSuccess('');
+      }, 5000);
+      return () => clearTimeout(timer);
     }
-  ];
+  }, [success]);
+
+  // Effet pour gérer la disparition des messages d'erreur
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError('');
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  const fetchHospitals = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const headers = { Authorization: `Bearer ${token}` };
+      const response = await axios.get('http://localhost:3001/api/hospitals', { headers });
+      setHospitals(response.data);
+    } catch (err) {
+      setError('Erreur lors du chargement des hôpitaux');
+    }
+  };
+
+  const fetchAdmins = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const headers = { Authorization: `Bearer ${token}` };
+      const response = await axios.get('http://localhost:3001/api/hospital-admins', { headers });
+      setAdmins(response.data);
+    } catch (err) {
+      setError('Erreur lors du chargement des administrateurs');
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const headers = { Authorization: `Bearer ${token}` };
+      if (modalType === 'edit') {
+        await axios.put(`http://localhost:3001/api/hospitals/${formData.id}`, formData, { headers });
+        setSuccess('Hôpital modifié avec succès');
+      } else if (modalType === 'admin') {
+        await axios.post('http://localhost:3001/api/hospital-admins', formData, { headers });
+        setSuccess('Administrateur ajouté avec succès');
+        fetchAdmins();
+      } else if (modalType === 'editAdmin') {
+        // On n'envoie le mot de passe que s'il a été modifié
+        const updateData = { email: formData.email, hospitalId: formData.hospitalId };
+        if (formData.password) updateData.password = formData.password;
+        await axios.put(`http://localhost:3001/api/hospital-admins/${formData.id}`, updateData, { headers });
+        setSuccess('Administrateur modifié avec succès');
+        fetchAdmins();
+      } else {
+        await axios.post('http://localhost:3001/api/hospitals', formData, { headers });
+        setSuccess('Hôpital créé avec succès');
+        setFormData({ name: '', address: '', phone: '', email: '', hospitalId: '', password: '' });
+      }
+      setShowAddModal(false);
+      fetchHospitals();
+    } catch (err) {
+      setError('Erreur lors de l\'opération');
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      const headers = { Authorization: `Bearer ${token}` };
+      await axios.delete(`http://localhost:3001/api/hospitals/${id}`, { headers });
+      setSuccess('Hôpital supprimé avec succès');
+      fetchHospitals();
+    } catch (err) {
+      setError('Erreur lors de la suppression de l\'hôpital');
+    }
+  };
+
+  const handleDeleteAdmin = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      const headers = { Authorization: `Bearer ${token}` };
+      await axios.delete(`http://localhost:3001/api/hospital-admins/${id}`, { headers });
+      setSuccess('Administrateur supprimé avec succès');
+      fetchAdmins();
+    } catch (err) {
+      setError('Erreur lors de la suppression de l\'administrateur');
+    }
+  };
 
   const handleAddClick = (type) => {
     setModalType(type);
+    setShowAddModal(true);
+  };
+
+  const handleEditAdmin = (admin) => {
+    setFormData({
+      email: admin.email,
+      password: '', // Laisser vide, à remplir si on veut changer le mot de passe
+      hospitalId: admin.hospitalId,
+      id: admin.id
+    });
+    setModalType('editAdmin');
+    setShowAddModal(true);
+  };
+
+  const handleEditHospital = (hospital) => {
+    setFormData({
+      id: hospital.id,
+      name: hospital.name,
+      address: hospital.address,
+      phone: hospital.phone,
+      email: hospital.email
+    });
+    setModalType('edit');
     setShowAddModal(true);
   };
 
@@ -78,6 +200,9 @@ const SuperAdmin = () => {
         </div>
       </div>
 
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
+
       <div className="admin-tabs">
         <button 
           className={`tab-button ${activeTab === 'hospitals' ? 'active' : ''}`}
@@ -101,24 +226,21 @@ const SuperAdmin = () => {
             <div key={hospital.id} className="hospital-card">
               <div className="hospital-header">
                 <h3>{hospital.name}</h3>
-                <span className={`status-badge ${hospital.status}`}>
-                  {hospital.status === 'active' ? 'Actif' : 'Inactif'}
+                <span className={`status-badge ${hospital.isActive ? 'active' : 'inactive'}`}>
+                  {hospital.isActive ? 'Actif' : 'Inactif'}
                 </span>
               </div>
               <div className="hospital-info">
                 <p><i className="fas fa-map-marker-alt"></i> {hospital.address}</p>
                 <p><i className="fas fa-phone"></i> {hospital.phone}</p>
                 <p><i className="fas fa-envelope"></i> {hospital.email}</p>
-                <p><i className="fas fa-users"></i> {hospital.adminCount} administrateurs</p>
               </div>
               <div className="hospital-actions">
-                <button className="action-button edit">
-                  <i className="fas fa-edit"></i>
-                  Modifier
+                <button className="action-button edit" onClick={() => handleEditHospital(hospital)}>
+                  <i className="fas fa-edit"></i> Modifier
                 </button>
-                <button className="action-button delete">
-                  <i className="fas fa-trash"></i>
-                  Supprimer
+                <button className="action-button delete" onClick={() => handleDelete(hospital.id)}>
+                  <i className="fas fa-trash"></i> Supprimer
                 </button>
               </div>
             </div>
@@ -129,24 +251,23 @@ const SuperAdmin = () => {
           {admins.map(admin => (
             <div key={admin.id} className="admin-card">
               <div className="admin-header">
-                <h3>{admin.name}</h3>
-                <span className={`status-badge ${admin.status}`}>
-                  {admin.status === 'active' ? 'Actif' : 'Inactif'}
+                <h3>{admin.email}</h3>
+                <span className={`status-badge ${admin.isActive ? 'active' : 'inactive'}`}>
+                  {admin.isActive ? 'Actif' : 'Inactif'}
                 </span>
               </div>
               <div className="admin-info">
-                <p><i className="fas fa-envelope"></i> {admin.email}</p>
-                <p><i className="fas fa-hospital"></i> {admin.hospital}</p>
-                <p><i className="fas fa-user-tag"></i> {admin.role}</p>
+                <p>
+                  <i className="fas fa-hospital"></i> 
+                  {hospitals.find(h => h.id === admin.hospitalId)?.name || 'Hôpital non assigné'}
+                </p>
               </div>
               <div className="admin-actions">
-                <button className="action-button edit">
-                  <i className="fas fa-edit"></i>
-                  Modifier
+                <button className="action-button edit" onClick={() => handleEditAdmin(admin)}>
+                  <i className="fas fa-edit"></i> Modifier
                 </button>
-                <button className="action-button delete">
-                  <i className="fas fa-trash"></i>
-                  Supprimer
+                <button className="action-button delete" onClick={() => handleDeleteAdmin(admin.id)}>
+                  <i className="fas fa-trash"></i> Supprimer
                 </button>
               </div>
             </div>
@@ -155,11 +276,18 @@ const SuperAdmin = () => {
       )}
 
       {showAddModal && (
-        <div className="modal-overlay">
+        <div 
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target.className === 'modal-overlay') {
+              setShowAddModal(false);
+            }
+          }}
+        >
           <div className="modal-content">
             <div className="modal-header">
               <h2>
-                {modalType === 'hospital' ? 'Ajouter un hôpital' : 'Ajouter un administrateur'}
+                {modalType === 'hospital' ? 'Ajouter un hôpital' : modalType === 'editAdmin' ? 'Modifier un administrateur' : 'Ajouter un administrateur'}
               </h2>
               <button 
                 className="modal-close"
@@ -169,38 +297,85 @@ const SuperAdmin = () => {
               </button>
             </div>
             <div className="modal-body">
-              {modalType === 'hospital' ? (
-                <form className="add-form">
+              <form className="add-form" onSubmit={handleSubmit}>
+              {(modalType === 'hospital' || modalType === 'edit') ? (
+                  <>
                   <div className="form-group">
                     <label>Nom de l'hôpital</label>
-                    <input type="text" placeholder="Entrez le nom de l'hôpital" />
+                      <input 
+                        type="text" 
+                        name="name"
+                        value={formData.name || ''}
+                        onChange={handleInputChange}
+                        placeholder="Entrez le nom de l'hôpital" 
+                        required
+                      />
                   </div>
                   <div className="form-group">
                     <label>Adresse</label>
-                    <input type="text" placeholder="Entrez l'adresse" />
+                      <input 
+                        type="text" 
+                        name="address"
+                        value={formData.address || ''}
+                        onChange={handleInputChange}
+                        placeholder="Entrez l'adresse" 
+                        required
+                      />
                   </div>
                   <div className="form-group">
                     <label>Téléphone</label>
-                    <input type="tel" placeholder="Entrez le numéro de téléphone" />
+                      <input 
+                        type="tel" 
+                        name="phone"
+                        value={formData.phone || ''}
+                        onChange={handleInputChange}
+                        placeholder="Entrez le numéro de téléphone" 
+                        required
+                      />
                   </div>
                   <div className="form-group">
                     <label>Email</label>
-                    <input type="email" placeholder="Entrez l'adresse email" />
+                      <input 
+                        type="email" 
+                        name="email"
+                        value={formData.email || ''}
+                        onChange={handleInputChange}
+                        placeholder="Entrez l'adresse email" 
+                        required
+                      />
                   </div>
-                </form>
-              ) : (
-                <form className="add-form">
+                  </>
+              ) : modalType === 'editAdmin' ? (
+                  <>
                   <div className="form-group">
-                    <label>Nom de l'administrateur</label>
-                    <input type="text" placeholder="Entrez le nom de l'administrateur" />
+                    <label>Email de l'administrateur</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="Entrez l'email de l'administrateur"
+                      required
+                    />
                   </div>
                   <div className="form-group">
-                    <label>Email</label>
-                    <input type="email" placeholder="Entrez l'adresse email" />
+                    <label>Nouveau mot de passe (laisser vide pour ne pas changer)</label>
+                    <input
+                      type="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      placeholder="Entrez le nouveau mot de passe"
+                    />
                   </div>
                   <div className="form-group">
                     <label>Hôpital</label>
-                    <select>
+                    <select
+                      name="hospitalId"
+                      value={formData.hospitalId}
+                      onChange={handleInputChange}
+                      required
+                    >
                       <option value="">Sélectionnez un hôpital</option>
                       {hospitals.map(hospital => (
                         <option key={hospital.id} value={hospital.id}>
@@ -209,26 +384,55 @@ const SuperAdmin = () => {
                       ))}
                     </select>
                   </div>
+                  </>
+                ) : (
+                  <>
                   <div className="form-group">
-                    <label>Rôle</label>
-                    <select>
-                      <option value="admin">Administrateur Principal</option>
-                      <option value="subadmin">Administrateur Secondaire</option>
+                      <label>Email de l'administrateur</label>
+                      <input 
+                        type="email" 
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="Entrez l'email de l'administrateur" 
+                        required
+                      />
+                  </div>
+                  <div className="form-group">
+                      <label>Mot de passe</label>
+                      <input 
+                        type="password" 
+                        name="password"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        placeholder="Entrez le mot de passe" 
+                        required
+                      />
+                  </div>
+                  <div className="form-group">
+                    <label>Hôpital</label>
+                      <select 
+                        name="hospitalId" 
+                        value={formData.hospitalId} 
+                        onChange={handleInputChange}
+                        required
+                      >
+                      <option value="">Sélectionnez un hôpital</option>
+                      {hospitals.map(hospital => (
+                        <option key={hospital.id} value={hospital.id}>
+                          {hospital.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
+                  </>
+                )}
+                <div className="form-actions">
+                  <button type="submit" className="submit-button">
+                    {modalType === 'hospital' ? 'Créer' : modalType === 'editAdmin' ? 'Modifier' : 'Ajouter'}
+                  </button>
+                  </div>
                 </form>
-              )}
-            </div>
-            <div className="modal-footer">
-              <button 
-                className="cancel-button"
-                onClick={() => setShowAddModal(false)}
-              >
-                Annuler
-              </button>
-              <button className="submit-button">
-                {modalType === 'hospital' ? 'Ajouter l\'hôpital' : 'Ajouter l\'administrateur'}
-              </button>
             </div>
           </div>
         </div>
