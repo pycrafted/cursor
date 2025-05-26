@@ -1,40 +1,64 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../database/config');
-const Hospital = require('./Hospital');
+const { Model, DataTypes } = require('sequelize');
 
-const HospitalAdmin = sequelize.define('HospitalAdmin', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-    validate: {
-      isEmail: true
+module.exports = (sequelize) => {
+  class HospitalAdmin extends Model {}
+  
+  HospitalAdmin.init({
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    hospitalId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Hospitals',
+        key: 'id'
+      }
+    },
+    mustChangePassword: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
+    role: {
+      type: DataTypes.STRING,
+      defaultValue: 'admin'
     }
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  isActive: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true
-  },
-  hospitalId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: Hospital,
-      key: 'id'
-    }
-  }
-});
+  }, {
+    sequelize,
+    modelName: 'HospitalAdmin',
+    tableName: 'hospital_admins',
+    timestamps: true
+  });
 
-HospitalAdmin.belongsTo(Hospital, { foreignKey: 'hospitalId' });
-Hospital.hasMany(HospitalAdmin, { foreignKey: 'hospitalId' });
-
-module.exports = HospitalAdmin; 
+  return HospitalAdmin;
+}; 

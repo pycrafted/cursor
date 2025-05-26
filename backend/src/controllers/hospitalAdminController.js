@@ -1,12 +1,17 @@
 const HospitalAdmin = require('../models/HospitalAdmin');
 const bcrypt = require('bcryptjs');
 
-// Récupérer tous les administrateurs
+// Récupérer tous les administrateurs (super admin uniquement)
 exports.getAllAdmins = async (req, res) => {
   console.log('Getting all hospital admins...');
   try {
+    const where = { isActive: true };
+    if (req.user.role === 'hospital') {
+      where.hospitalId = req.user.id; // Filtrer par hospitalId
+      console.log(`Filtering admins for hospital ID: ${req.user.id}`);
+    }
     const admins = await HospitalAdmin.findAll({
-      where: { isActive: true },
+      where,
       attributes: { exclude: ['password'] }
     });
     console.log(`Found ${admins.length} active admins`);
@@ -14,6 +19,25 @@ exports.getAllAdmins = async (req, res) => {
   } catch (error) {
     console.error('Error in getAllAdmins:', error);
     res.status(500).json({ message: 'Erreur lors de la récupération des administrateurs' });
+  }
+};
+
+// Récupérer les administrateurs d'un hôpital spécifique
+exports.getHospitalAdmins = async (req, res) => {
+  console.log('Getting hospital admins for hospital:', req.user.id);
+  try {
+    const admins = await HospitalAdmin.findAll({
+      where: { 
+        hospitalId: req.user.id,
+        isActive: true 
+      },
+      attributes: { exclude: ['password'] }
+    });
+    console.log(`Found ${admins.length} active admins for hospital ${req.user.id}`);
+    res.json(admins);
+  } catch (error) {
+    console.error('Error in getHospitalAdmins:', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération des administrateurs de l\'hôpital' });
   }
 };
 

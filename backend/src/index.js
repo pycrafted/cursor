@@ -9,6 +9,7 @@ const hospitalRoutes = require('./routes/hospitalRoutes');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const hospitalAdminRoutes = require('./routes/hospitalAdminRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
@@ -57,6 +58,11 @@ app.use('/api/users', (req, res, next) => {
   next();
 }, userRoutes);
 console.log('✓ User routes registered');
+
+// Routes protégées
+app.use('/api/hospitals', hospitalRoutes);
+app.use('/api/hospital-admins', hospitalAdminRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Middleware pour logger les erreurs
 app.use((err, req, res, next) => {

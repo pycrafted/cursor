@@ -19,6 +19,18 @@ const sequelize = new Sequelize(
   }
 );
 
+// Import des modèles
+const Hospital = require('../models/Hospital')(sequelize);
+const Doctor = require('../models/Doctor')(sequelize);
+const Secretary = require('../models/Secretary')(sequelize);
+
+// Définition des associations
+Hospital.hasMany(Doctor, { foreignKey: 'hospitalId' });
+Doctor.belongsTo(Hospital, { foreignKey: 'hospitalId' });
+
+Hospital.hasMany(Secretary, { foreignKey: 'hospitalId' });
+Secretary.belongsTo(Hospital, { foreignKey: 'hospitalId' });
+
 // Test de la connexion
 sequelize.authenticate()
   .then(() => {

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Hospital = require('../models/Hospital');
 
 exports.authenticateToken = async (req, res, next) => {
   console.log('Authenticating token...');
@@ -14,14 +15,25 @@ exports.authenticateToken = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log('Token decoded:', { userId: decoded.id, role: decoded.role });
-    
-    const user = await User.findByPk(decoded.id);
-    if (!user) {
-      console.log('User not found');
-      return res.status(401).json({ message: 'Utilisateur non trouvé' });
+
+    let entity;
+    if (decoded.role === 'hospital') {
+      // Vérifier dans la table Hospitals
+      entity = await Hospital.findByPk(decoded.id);
+      if (!entity) {
+        console.log('Hospital not found');
+        return res.status(401).json({ message: 'Hôpital non trouvé' });
+      }
+    } else {
+      // Vérifier dans la table Users
+      entity = await User.findByPk(decoded.id);
+      if (!entity) {
+        console.log('User not found');
+        return res.status(401).json({ message: 'Utilisateur non trouvé' });
+      }
     }
 
-    req.user = user;
+    req.user = { ...decoded, entity }; // Ajouter l'entité (User ou Hospital) à req.user
     console.log('Authentication successful');
     next();
   } catch (error) {

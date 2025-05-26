@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const hospitalAdminController = require('../controllers/hospitalAdminController');
-const { authenticateToken, isSuperAdmin } = require('../middleware/auth');
+const { authenticateToken } = require('../middleware/auth');
+const { checkRole } = require('../middleware/authMiddleware');
 
 console.log('Initializing hospital admin routes...');
 
@@ -11,8 +12,8 @@ router.use((req, res, next) => {
   next();
 });
 
-// Routes protégées par authentification et rôle super admin
-router.use(authenticateToken, isSuperAdmin);
+// Routes protégées par authentification et rôle super_admin ou hospital
+router.use(authenticateToken, checkRole(['super_admin', 'hospital']));
 
 // Récupérer tous les administrateurs
 router.get('/', (req, res, next) => {
@@ -20,14 +21,14 @@ router.get('/', (req, res, next) => {
   hospitalAdminController.getAllAdmins(req, res, next);
 });
 
-// Créer un nouvel administrateur
-router.post('/', (req, res, next) => {
+// Créer un nouvel administrateur (super_admin uniquement)
+router.post('/', checkRole(['super_admin']), (req, res, next) => {
   console.log('POST / - Creating new hospital admin');
   hospitalAdminController.createAdmin(req, res, next);
 });
 
-// Supprimer un administrateur
-router.delete('/:id', (req, res, next) => {
+// Supprimer un administrateur (super_admin uniquement)
+router.delete('/:id', checkRole(['super_admin']), (req, res, next) => {
   console.log(`DELETE /${req.params.id} - Deleting hospital admin`);
   hospitalAdminController.deleteAdmin(req, res, next);
 });

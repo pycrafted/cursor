@@ -148,3 +148,26 @@
 - Port backend : 3001
 - URL frontend : http://localhost:3001
 - Fichier principal : backend/src/index.js
+
+# Mémo - Gestion des Administrateurs d'Hôpital
+
+## Problème Initial
+Le dashboard du compte hôpital affichait le message d'erreur "Erreur lors du chargement des administrateurs" au lieu de la liste des administrateurs.
+
+## Solution Implémentée
+1. Modification du middleware d'authentification pour gérer les comptes hôpital
+2. Mise à jour des routes pour autoriser l'accès aux hôpitaux
+3. Filtrage des administrateurs par hospitalId
+4. Amélioration de l'interface utilisateur
+
+## Structure Actuelle
+- Les hôpitaux peuvent voir uniquement leurs propres administrateurs
+- Les super_admins peuvent voir tous les administrateurs
+- Les logs sont en place pour le débogage
+- L'interface s'adapte au rôle de l'utilisateur
+
+## Prochaines Étapes
+1. Ajouter des tests unitaires pour les nouvelles fonctionnalités
+2. Documenter l'API pour les développeurs
+3. Ajouter des fonctionnalités de recherche et de filtrage
+4. Implémenter la pagination pour les grandes listes d'administrateurs
