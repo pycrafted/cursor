@@ -55,6 +55,32 @@ Thumbs.db
 
 # Ignorer tout par défaut
 *
+*/*
+
+# Ne pas ignorer les fichiers liés aux images DICOM
+!backend/src/routes/dicomRoutes.js
+!backend/src/controllers/dicomController.js
+!backend/src/middleware/dicomMiddleware.js
+!backend/src/services/dicomService.js
+!backend/src/utils/dicomUtils.js
+!backend/src/config/dicomConfig.js
+!backend/src/models/DicomImage.js
+!backend/src/models/DicomStudy.js
+!backend/src/models/DicomSeries.js
+!backend/src/models/DicomInstance.js
+
+# Ignorer les fichiers DICOM eux-mêmes
+*.dcm
+*.dicom
+uploads/
+public/uploads/
+uploads/dicom/
+public/uploads/dicom/
+
+# Ignorer les fichiers temporaires
+*.tmp
+*.temp
+.cache/
 
 # Fichiers backend essentiels
 !backend/src/index.js              # Point d'entrée du serveur et gestion des erreurs
@@ -115,7 +141,6 @@ __tests__/
 *.sqlite
 *.sqlite3
 *.db
-uploads/
 public/uploads/
 logs/
 npm-debug.log*
