@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { User } = require('../models');
+const { Hospital } = require('../models');
 
 const generateToken = (user) => {
   return jwt.sign(
@@ -99,7 +100,51 @@ const register = async (req, res) => {
   }
 };
 
+const loginHospital = async (req, res) => {
+  try {
+    console.log('--- Tentative de connexion HÔPITAL ---');
+    const { email, password } = req.body;
+    console.log('Email reçu :', email);
+    const hospital = await Hospital.findOne({ where: { email } });
+    if (!hospital) {
+      console.log('Aucun hôpital trouvé avec cet email');
+      return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
+    }
+    const isValidPassword = await bcrypt.compare(password, hospital.password);
+    console.log('Mot de passe valide :', isValidPassword);
+    if (!isValidPassword) {
+      console.log('Mot de passe incorrect');
+      return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
+    }
+    // Générer le token
+    const token = jwt.sign(
+      {
+        id: hospital.id,
+        email: hospital.email,
+        role: 'hospital',
+        mustChangePassword: hospital.mustChangePassword
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+    res.json({
+      token,
+      hospital: {
+        id: hospital.id,
+        email: hospital.email,
+        name: hospital.name,
+        mustChangePassword: hospital.mustChangePassword
+      }
+    });
+    console.log('--- Connexion HÔPITAL réussie ---');
+  } catch (error) {
+    console.error('Erreur lors de la connexion HÔPITAL :', error);
+    res.status(500).json({ message: 'Erreur lors de la connexion hôpital' });
+  }
+};
+
 module.exports = {
   login,
-  register
+  register,
+  loginHospital
 }; 

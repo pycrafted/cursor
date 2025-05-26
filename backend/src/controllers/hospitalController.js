@@ -1,4 +1,5 @@
 const { Hospital } = require('../models');
+const bcrypt = require('bcryptjs');
 
 // Get all hospitals
 exports.getAllHospitals = async (req, res) => {
@@ -15,15 +16,35 @@ exports.getAllHospitals = async (req, res) => {
 // Create a new hospital
 exports.createHospital = async (req, res) => {
   try {
+    console.log('--- Début de la création d\'un hôpital ---');
     const { name, address, phone, email } = req.body;
+    console.log('Données reçues :', { name, address, phone, email });
+
+    // Vérifier si l'email existe déjà
+    const existing = await Hospital.findOne({ where: { email } });
+    if (existing) {
+      console.log('Email déjà utilisé pour un hôpital :', email);
+      return res.status(400).json({ message: 'Cet email est déjà utilisé pour un hôpital' });
+    }
+
+    // Générer le mot de passe par défaut hashé
+    const defaultPassword = 'mediconnect';
+    const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+    console.log('Mot de passe par défaut hashé généré');
+
     const hospital = await Hospital.create({
       name,
       address,
       phone,
-      email
+      email,
+      password: hashedPassword,
+      mustChangePassword: true
     });
+    console.log('Hôpital créé :', hospital.toJSON());
     res.status(201).json(hospital);
+    console.log('--- Fin de la création d\'un hôpital ---');
   } catch (error) {
+    console.error('Erreur lors de la création de l\'hôpital :', error);
     res.status(400).json({ message: 'Erreur lors de la création de l\'hôpital', error: error.message });
   }
 };
@@ -77,5 +98,35 @@ exports.deleteHospital = async (req, res) => {
     res.json({ message: 'Hôpital supprimé avec succès' });
   } catch (error) {
     res.status(500).json({ message: 'Erreur lors de la suppression de l\'hôpital', error: error.message });
+  }
+};
+
+// Changer le mot de passe d'un hôpital
+exports.changeHospitalPassword = async (req, res) => {
+  try {
+    console.log('--- Début du changement de mot de passe HÔPITAL ---');
+    const hospitalId = req.params.id;
+    const { oldPassword, newPassword } = req.body;
+    console.log('ID hôpital:', hospitalId);
+    const hospital = await Hospital.findByPk(hospitalId);
+    if (!hospital) {
+      console.log('Hôpital non trouvé');
+      return res.status(404).json({ message: 'Hôpital non trouvé' });
+    }
+    // Vérifier l'ancien mot de passe
+    const isValid = await bcrypt.compare(oldPassword, hospital.password);
+    console.log('Ancien mot de passe valide:', isValid);
+    if (!isValid) {
+      return res.status(401).json({ message: 'Ancien mot de passe incorrect' });
+    }
+    // Hasher le nouveau mot de passe
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await hospital.update({ password: hashed, mustChangePassword: false });
+    console.log('Mot de passe changé avec succès pour l\'hôpital', hospital.email);
+    res.json({ message: 'Mot de passe changé avec succès' });
+    console.log('--- Fin du changement de mot de passe HÔPITAL ---');
+  } catch (error) {
+    console.error('Erreur lors du changement de mot de passe HÔPITAL:', error);
+    res.status(500).json({ message: 'Erreur lors du changement de mot de passe', error: error.message });
   }
 }; 

@@ -17,4 +17,7 @@ router.put('/:id', hospitalController.updateHospital);
 // Delete hospital
 router.delete('/:id', hospitalController.deleteHospital);
 
+// Changer le mot de passe d'un hôpital
+router.put('/:id/change-password', hospitalController.changeHospitalPassword);
+
 module.exports = router; 

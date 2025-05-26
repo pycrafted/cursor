@@ -17,6 +17,18 @@ const Navbar = () => {
     navigate('/login');
   };
 
+  // Décoder le token pour vérifier le rôle
+  let isSuperAdmin = false;
+  const token = localStorage.getItem('token');
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      isSuperAdmin = payload.role === 'super_admin';
+    } catch (e) {
+      isSuperAdmin = false;
+    }
+  }
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -74,13 +86,16 @@ const Navbar = () => {
             <span>Gestion des Hôpitaux</span>
           </Link>
 
-          <Link 
-            to="/super-admin" 
-            className={`nav-link ${isActive('/super-admin') ? 'active' : ''}`}
-          >
-            <i className="fas fa-user-cog"></i>
-            <span>Super Admin</span>
-          </Link>
+          {/* Lien Super Admin visible uniquement pour les super admin */}
+          {isSuperAdmin && (
+            <Link 
+              to="/super-admin" 
+              className={`nav-link ${isActive('/super-admin') ? 'active' : ''}`}
+            >
+              <i className="fas fa-user-cog"></i>
+              <span>Super Admin</span>
+            </Link>
+          )}
 
           <Link 
             to="/patients/create" 
