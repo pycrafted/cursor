@@ -202,8 +202,6 @@ const PatientInfo = () => {
           <div className="patient-basic-info">
             <h1>{patientData.informationsPersonnelles.nom}</h1>
             <div className="patient-details">
-              <p><strong>Numéro de carte d'identité:</strong> {patientData.informationsPersonnelles.numeroDossier}</p>
-              <p><strong>Numéro de téléphone:</strong> {patientData.informationsPersonnelles.telephone}</p>
               <p><strong>Numéro patient:</strong> {patientData.id}</p>
             </div>
           </div>

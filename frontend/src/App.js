@@ -7,8 +7,11 @@ import PatientInfo from './components/PatientInfo';
 import AppointmentForm from './components/AppointmentForm';
 import Navbar from './components/Navbar';
 import Login from './components/Login';
+import Register from './components/Register';
 import TeleconsultationFictive from './components/TeleconsultationFictive';
 import AdminDashboard from './components/AdminDashboard';
+import PatientCreation from './components/PatientCreation';
+import SuperAdmin from './components/SuperAdmin';
 import './App.css';
 
 function App() {
@@ -34,6 +37,7 @@ function App() {
       <div className="app">
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/*" element={
             <>
               <Navbar />
@@ -59,6 +63,8 @@ function App() {
                     } />
                     <Route path="/teleconsultation-fictive" element={<TeleconsultationFictive />} />
                     <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/super-admin" element={<SuperAdmin />} />
+                    <Route path="/patients/create" element={<PatientCreation />} />
                   </Routes>
                 </div>
               </main>

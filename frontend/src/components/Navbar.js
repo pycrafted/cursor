@@ -1,17 +1,20 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path) => {
     return location.pathname === path;
   };
 
   const handleLogout = () => {
-    // Simulation de déconnexion
-    console.log('Déconnexion...');
+    // Supprimer le token du localStorage
+    localStorage.removeItem('token');
+    // Rediriger vers la page de connexion
+    navigate('/login');
   };
 
   return (
@@ -48,11 +51,35 @@ const Navbar = () => {
           </Link>
 
           <Link 
+            to="/teleconsultation-fictive" 
+            className={`nav-link ${isActive('/teleconsultation-fictive') ? 'active' : ''}`}
+          >
+            <i className="fas fa-video"></i>
+            <span>Téléconsultation</span>
+          </Link>
+
+          <Link 
             to="/admin" 
             className={`nav-link ${isActive('/admin') ? 'active' : ''}`}
           >
             <i className="fas fa-user-shield"></i>
             <span>Administration</span>
+          </Link>
+
+          <Link 
+            to="/super-admin" 
+            className={`nav-link ${isActive('/super-admin') ? 'active' : ''}`}
+          >
+            <i className="fas fa-user-cog"></i>
+            <span>Super Admin</span>
+          </Link>
+
+          <Link 
+            to="/patients/create" 
+            className={`nav-link ${isActive('/patients/create') ? 'active' : ''}`}
+          >
+            <i className="fas fa-user-plus"></i>
+            <span>Créer Patient</span>
           </Link>
         </div>
       </div>
