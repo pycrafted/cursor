@@ -51,4 +51,73 @@ uploads/
 
 # Misc
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Ignorer tout par défaut
+*
+
+# Fichiers backend essentiels
+!backend/src/index.js              # Point d'entrée du serveur et gestion des erreurs
+!backend/src/routes/hospitalRoutes.js    # Routes hospitalières
+!backend/src/controllers/hospitalController.js  # Contrôleur hospitalier
+!backend/src/middleware/authMiddleware.js  # Middleware d'authentification
+!backend/src/models/Hospital.js    # Modèle Hospital
+!backend/src/database/config.js    # Configuration DB
+!backend/.env                      # Variables d'environnement
+!backend/package.json              # Dépendances backend
+
+# Fichiers frontend essentiels
+!frontend/src/App.js               # Composant principal
+!frontend/src/App.css              # Styles principaux
+!frontend/src/index.js             # Point d'entrée React
+!frontend/src/components/HospitalChangePassword.js  # Composant de changement de mot de passe
+!frontend/src/components/Login.js   # Composant de connexion
+!frontend/src/components/HospitalDashboard.js  # Dashboard hospitalier
+!frontend/src/components/HospitalDashboard.css  # Styles du dashboard
+!frontend/src/components/Navbar.js  # Barre de navigation
+!frontend/src/components/Navbar.css  # Styles de la barre de navigation
+!frontend/src/services/api.js      # Service API
+!frontend/src/utils/axiosConfig.js # Configuration Axios
+!frontend/src/context/AuthContext.js  # Contexte d'authentification
+!frontend/package.json             # Dépendances frontend
+
+# Documentation
+!backend/memo.md                   # Documentation du problème
+!README.md                         # Documentation générale
+
+# Ignorer tout le reste
+node_modules/
+dist/
+build/
+coverage/
+.DS_Store
+*.log
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.git/
+.gitignore
+__tests__/
+*.test.js
+*.spec.js
+.cache/
+.next/
+.nuxt/
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+.vscode-test
+.yarn/
+.pnp.*
+*.sqlite
+*.sqlite3
+*.db
+uploads/
+public/uploads/
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log* 

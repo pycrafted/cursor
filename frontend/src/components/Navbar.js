@@ -78,23 +78,15 @@ const Navbar = () => {
             <span>Administration</span>
           </Link>
 
-          <Link 
-            to="/hospitals" 
-            className={`nav-link ${isActive('/hospitals') ? 'active' : ''}`}
-          >
-            <i className="fas fa-hospital"></i>
-            <span>Gestion des Hôpitaux</span>
-          </Link>
-
           {/* Lien Super Admin visible uniquement pour les super admin */}
           {isSuperAdmin && (
-            <Link 
-              to="/super-admin" 
-              className={`nav-link ${isActive('/super-admin') ? 'active' : ''}`}
-            >
-              <i className="fas fa-user-cog"></i>
-              <span>Super Admin</span>
-            </Link>
+          <Link 
+            to="/super-admin" 
+            className={`nav-link ${isActive('/super-admin') ? 'active' : ''}`}
+          >
+            <i className="fas fa-user-cog"></i>
+            <span>Super Admin</span>
+          </Link>
           )}
 
           <Link 

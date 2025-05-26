@@ -13,22 +13,53 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/login', {
+      // 1. Essayer de se connecter comme utilisateur classique
+      let response = await fetch('http://localhost:3001/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
       });
+      let data = await response.json();
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Erreur de connexion');
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        // Rediriger selon le rôle
+        const payload = JSON.parse(atob(data.token.split('.')[1]));
+        if (payload.role === 'super_admin') {
+          navigate('/super-admin');
+        } else if (payload.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/dashboard');
+        }
+        return;
       }
 
-      localStorage.setItem('token', data.token);
-      navigate('/dashboard');
+      // 2. Si échec, essayer comme hôpital
+      response = await fetch('http://localhost:3001/api/auth/login-hospital', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        // Vérifier si le mot de passe doit être changé
+        if (data.hospital.mustChangePassword) {
+          navigate('/hospital-change-password');
+        } else {
+          navigate('/hospital-dashboard');
+        }
+        return;
+      }
+
+      // 3. Si les deux échouent
+      throw new Error(data.message || 'Email ou mot de passe incorrect');
     } catch (err) {
       setError(err.message);
     }

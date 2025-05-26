@@ -17,8 +17,8 @@ exports.getAllHospitals = async (req, res) => {
 exports.createHospital = async (req, res) => {
   try {
     console.log('--- Début de la création d\'un hôpital ---');
-    const { name, address, phone, email } = req.body;
-    console.log('Données reçues :', { name, address, phone, email });
+    const { name, address, phone, email, description, website } = req.body;
+    console.log('Données reçues :', { name, address, phone, email, description, website });
 
     // Vérifier si l'email existe déjà
     const existing = await Hospital.findOne({ where: { email } });
@@ -38,6 +38,8 @@ exports.createHospital = async (req, res) => {
       phone,
       email,
       password: hashedPassword,
+      description,
+      website,
       mustChangePassword: true
     });
     console.log('Hôpital créé :', hospital.toJSON());
@@ -65,22 +67,41 @@ exports.getHospitalById = async (req, res) => {
 // Update hospital
 exports.updateHospital = async (req, res) => {
   try {
-    const { name, address, phone, email } = req.body;
+    console.log('--- Début de la mise à jour de l\'hôpital ---');
+    console.log('Données reçues:', req.body);
+
+    const { name, address, phone, email, description, website } = req.body;
     const hospital = await Hospital.findByPk(req.params.id);
     
     if (!hospital) {
+      console.log('Hôpital non trouvé');
       return res.status(404).json({ message: 'Hôpital non trouvé' });
     }
 
-    await hospital.update({
+    // Vérifier si l'email est déjà utilisé par un autre hôpital
+    if (email !== hospital.email) {
+      const existing = await Hospital.findOne({ where: { email } });
+      if (existing) {
+        console.log('Email déjà utilisé par un autre hôpital');
+        return res.status(400).json({ message: 'Cet email est déjà utilisé par un autre hôpital' });
+      }
+    }
+
+    const updateData = {
       name,
       address,
       phone,
-      email
-    });
+      email,
+      description,
+      website
+    };
 
+    console.log('Données de mise à jour:', updateData);
+    await hospital.update(updateData);
+    console.log('Hôpital mis à jour avec succès');
     res.json(hospital);
   } catch (error) {
+    console.error('Erreur lors de la mise à jour:', error);
     res.status(400).json({ message: 'Erreur lors de la mise à jour de l\'hôpital', error: error.message });
   }
 };
@@ -104,29 +125,47 @@ exports.deleteHospital = async (req, res) => {
 // Changer le mot de passe d'un hôpital
 exports.changeHospitalPassword = async (req, res) => {
   try {
-    console.log('--- Début du changement de mot de passe HÔPITAL ---');
-    const hospitalId = req.params.id;
-    const { oldPassword, newPassword } = req.body;
-    console.log('ID hôpital:', hospitalId);
-    const hospital = await Hospital.findByPk(hospitalId);
+    console.log('--- Début du changement de mot de passe ---');
+    console.log('ID de l\'hôpital:', req.params.id);
+    console.log('Données reçues:', req.body);
+
+    const { currentPassword, newPassword } = req.body;
+    const hospital = await Hospital.findByPk(req.params.id);
+
+    console.log('Hôpital trouvé:', hospital ? 'Oui' : 'Non');
+
     if (!hospital) {
-      console.log('Hôpital non trouvé');
+      console.log('Hôpital non trouvé avec l\'ID:', req.params.id);
       return res.status(404).json({ message: 'Hôpital non trouvé' });
     }
-    // Vérifier l'ancien mot de passe
-    const isValid = await bcrypt.compare(oldPassword, hospital.password);
-    console.log('Ancien mot de passe valide:', isValid);
+
+    console.log('Vérification du mot de passe actuel...');
+    const isValid = await bcrypt.compare(currentPassword, hospital.password);
+    console.log('Mot de passe actuel valide:', isValid);
+
     if (!isValid) {
-      return res.status(401).json({ message: 'Ancien mot de passe incorrect' });
+      console.log('Mot de passe actuel incorrect');
+      return res.status(400).json({ message: 'Mot de passe actuel incorrect' });
     }
-    // Hasher le nouveau mot de passe
-    const hashed = await bcrypt.hash(newPassword, 10);
-    await hospital.update({ password: hashed, mustChangePassword: false });
-    console.log('Mot de passe changé avec succès pour l\'hôpital', hospital.email);
-    res.json({ message: 'Mot de passe changé avec succès' });
-    console.log('--- Fin du changement de mot de passe HÔPITAL ---');
+
+    console.log('Hachage du nouveau mot de passe...');
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+    console.log('Mise à jour du mot de passe...');
+    await hospital.update({
+      password: hashedPassword,
+      mustChangePassword: false
+    });
+
+    console.log('Mot de passe mis à jour avec succès');
+    res.json({ message: 'Mot de passe modifié avec succès' });
+    console.log('--- Fin du changement de mot de passe ---');
   } catch (error) {
-    console.error('Erreur lors du changement de mot de passe HÔPITAL:', error);
-    res.status(500).json({ message: 'Erreur lors du changement de mot de passe', error: error.message });
+    console.error('Erreur lors du changement de mot de passe:', error);
+    res.status(500).json({ 
+      message: 'Erreur lors du changement de mot de passe', 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 }; 

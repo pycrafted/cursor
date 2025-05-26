@@ -1,23 +1,32 @@
 const express = require('express');
 const router = express.Router();
 const hospitalController = require('../controllers/hospitalController');
+const { verifyToken } = require('../middleware/authMiddleware');
 
-// Get all hospitals
-router.get('/', hospitalController.getAllHospitals);
-
-// Create a new hospital
+// Routes publiques
 router.post('/', hospitalController.createHospital);
 
-// Get hospital by ID
-router.get('/:id', hospitalController.getHospitalById);
+// Routes protégées
+router.get('/', verifyToken, hospitalController.getAllHospitals);
+router.get('/:id', verifyToken, hospitalController.getHospitalById);
+router.put('/:id', verifyToken, hospitalController.updateHospital);
+router.delete('/:id', verifyToken, hospitalController.deleteHospital);
 
-// Update hospital
-router.put('/:id', hospitalController.updateHospital);
-
-// Delete hospital
-router.delete('/:id', hospitalController.deleteHospital);
-
-// Changer le mot de passe d'un hôpital
-router.put('/:id/change-password', hospitalController.changeHospitalPassword);
+// Route de changement de mot de passe
+router.post('/:id/change-password', verifyToken, async (req, res, next) => {
+  console.log('\n=== Changement de mot de passe ===');
+  console.log('Méthode HTTP:', req.method);
+  console.log('URL:', req.url);
+  console.log('ID Hospital:', req.params.id);
+  console.log('Body:', req.body);
+  console.log('Headers:', req.headers);
+  
+  try {
+    await hospitalController.changeHospitalPassword(req, res, next);
+  } catch (error) {
+    console.error('Erreur lors du changement de mot de passe:', error);
+    next(error);
+  }
+});
 
 module.exports = router; 

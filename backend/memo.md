@@ -104,3 +104,47 @@
    - Médecin a accès complet aux dossiers de ses patients (liés ou avec rendez-vous)
    - Patient peut consulter son dossier en lecture seule
    - Images DICOM gérées par le médecin, consultables par le patient
+
+## Problème de la route de changement de mot de passe (POST /api/hospitals/:id/change-password)
+
+### Symptômes
+- La route retourne une erreur 404 (Not Found)
+- Le frontend envoie correctement la requête à `http://localhost:3001/api/hospitals/2/change-password`
+- Les logs du serveur ne montrent pas la route dans la liste des routes exposées
+
+### Analyse
+1. **Configuration du serveur**
+   - Le fichier principal est `backend/src/index.js`
+   - Le port est correctement configuré (PORT=3001 dans .env)
+   - Les routes hospitalières sont montées avec `app.use('/api/hospitals', hospitalRoutes)`
+
+2. **Routes définies**
+   - La route est correctement définie dans `hospitalRoutes.js`
+   - Le contrôleur `changeHospitalPassword` existe dans `hospitalController.js`
+
+### Solution
+1. **Arrêter tous les serveurs Node en cours**
+   ```sh
+   taskkill /F /IM node.exe
+   ```
+
+2. **Lancer le serveur avec le bon fichier**
+   ```sh
+   cd backend
+   node src/index.js
+   ```
+
+3. **Vérifier les logs**
+   - Le serveur doit afficher "Server is running on port 3001"
+   - Les routes `/api/hospitals` doivent être listées
+
+### Points importants à retenir
+- Toujours lancer le serveur depuis le dossier `backend`
+- Utiliser `node src/index.js` et non `node index.js`
+- Vérifier qu'aucun autre serveur Node ne tourne sur le port 3001
+- Les routes dynamiques (avec paramètres comme `:id`) ne sont pas affichées dans les logs mais sont bien actives
+
+### Configuration requise
+- Port backend : 3001
+- URL frontend : http://localhost:3001
+- Fichier principal : backend/src/index.js

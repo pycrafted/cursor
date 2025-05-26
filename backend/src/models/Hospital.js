@@ -31,6 +31,17 @@ const Hospital = sequelize.define('Hospital', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  website: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    validate: {
+      isUrl: true
+    }
+  },
   mustChangePassword: {
     type: DataTypes.BOOLEAN,
     defaultValue: true

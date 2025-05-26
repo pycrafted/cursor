@@ -12,7 +12,8 @@ import TeleconsultationFictive from './components/TeleconsultationFictive';
 import AdminDashboard from './components/AdminDashboard';
 import PatientCreation from './components/PatientCreation';
 import SuperAdmin from './components/SuperAdmin';
-import HospitalManagement from './components/HospitalManagement';
+import HospitalDashboard from './components/HospitalDashboard';
+import HospitalChangePassword from './components/HospitalChangePassword';
 import './App.css';
 
 function App() {
@@ -66,7 +67,8 @@ function App() {
                     <Route path="/admin" element={<AdminDashboard />} />
                     <Route path="/super-admin" element={<SuperAdmin />} />
                     <Route path="/patients/create" element={<PatientCreation />} />
-                    <Route path="/hospitals" element={<HospitalManagement />} />
+                    <Route path="/hospital-dashboard" element={<HospitalDashboard />} />
+                    <Route path="/hospital-change-password" element={<HospitalChangePassword />} />
                   </Routes>
                 </div>
               </main>
